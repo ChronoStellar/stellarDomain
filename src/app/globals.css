@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap');
+
+:root {
+  --bg: oklch(97.6% 0.005 90);
+  --bg-alt: oklch(93.8% 0.007 90);
+  --card: oklch(99% 0.003 90);
+  --text: oklch(21% 0.012 90);
+  --text-muted: oklch(46% 0.012 90);
+  --text-faint: oklch(62% 0.01 90);
+  --border: oklch(87% 0.007 90);
+  --accent: oklch(56% 0.15 300);
+  --accent-dim: oklch(46% 0.13 300);
+  --accent-soft: oklch(93% 0.035 300);
+  
+  --mono: 'Source Sans 3', system-ui, sans-serif;
+  --sans: 'Source Sans 3', system-ui, sans-serif;
+  --display: 'Sora', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-dim);
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* Base Utility Classes */
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.heading-display {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.text-mono {
+  font-family: var(--mono);
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+  .work-grid { grid-template-columns: 1fr !important; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .h1-title { font-size: 40px !important; }
+}
+
+@media (max-width: 640px) {
+  .nav-links { gap: 16px !important; font-size: 12px !important; }
+}

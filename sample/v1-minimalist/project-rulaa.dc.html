@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rulaa — Hendrik Nicolas Carlo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  a { color: oklch(56% 0.15 300); text-decoration: none; }
+  a:hover { color: oklch(46% 0.15 300); }
+  @media (max-width: 780px) {
+    .hc-meta-grid { grid-template-columns: 1fr !important; }
+    .hc-title { font-size:38px !important; }
+  }
+</style>
+</helmet>
+
+<div style="--bg:oklch(97.6% 0.005 90); --bg-alt:oklch(93.8% 0.007 90); --card:oklch(99% 0.003 90); --text:oklch(21% 0.012 90); --text-muted:oklch(46% 0.012 90); --text-faint:oklch(62% 0.01 90); --border:oklch(87% 0.007 90); --accent:oklch(56% 0.15 300); --accent-dim:oklch(46% 0.13 300); --accent-soft:oklch(93% 0.035 300); --mono:'Source Sans 3',system-ui,sans-serif; --sans:'Source Sans 3',system-ui,sans-serif; --display:'Sora',system-ui,sans-serif; background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh;">
+
+  <div style="position:sticky; top:0; z-index:50; backdrop-filter:blur(10px); background:color-mix(in oklch, var(--bg) 82%, transparent); border-bottom:1px solid var(--border);">
+    <div style="max-width:900px; margin:0 auto; padding:18px 28px; display:flex; align-items:center; justify-content:space-between;">
+      <a href="index.dc.html" style="font-family:var(--display); font-weight:600; font-size:18px; color:var(--text); letter-spacing:-0.02em;">Hendrik&nbsp;Carlo</a>
+      <a href="index.dc.html#work" style="font-family:var(--mono); font-size:13px; color:var(--text-muted);">← All work</a>
+    </div>
+  </div>
+
+  <div style="max-width:780px; margin:0 auto; padding:70px 28px 40px;">
+    <div style="display:flex; gap:8px; margin-bottom:22px; flex-wrap:wrap;">
+      <span style="font-family:var(--mono); font-size:11px; color:var(--accent-dim); background:var(--accent-soft); padding:4px 10px; border-radius:100px;">SwiftUI</span>
+      <span style="font-family:var(--mono); font-size:11px; color:var(--accent-dim); background:var(--accent-soft); padding:4px 10px; border-radius:100px;">UIKit</span>
+      <span style="font-family:var(--mono); font-size:11px; color:var(--accent-dim); background:var(--accent-soft); padding:4px 10px; border-radius:100px;">Vision</span>
+      <span style="font-family:var(--mono); font-size:11px; color:var(--accent-dim); background:var(--accent-soft); padding:4px 10px; border-radius:100px;">Docker</span>
+      <span style="font-family:var(--mono); font-size:11px; color:var(--accent-dim); background:var(--accent-soft); padding:4px 10px; border-radius:100px;">MVVM</span>
+    </div>
+    <h1 class="hc-title" style="font-family:var(--display); font-size:52px; font-weight:600; letter-spacing:-0.02em; line-height:1.08; margin:0 0 18px;">Rulaa</h1>
+    <p style="font-size:19px; line-height:1.6; color:var(--text-muted); margin:0;">Clothing size recommendation &amp; body measurement app, built end-to-end during the Apple Developer Academy internship.</p>
+  </div>
+
+  <div class="hc-meta-grid" style="max-width:780px; margin:0 auto; padding:0 28px 40px; display:grid; grid-template-columns:repeat(3,1fr); gap:1px; border:1px solid var(--border); border-radius:14px; overflow:hidden; background:var(--border);">
+    <div style="background:var(--card); padding:18px 20px;"><div style="font-family:var(--mono); font-size:11px; color:var(--text-faint); margin-bottom:6px;">ROLE</div><div style="font-size:14px; color:var(--text);">AI/ML + iOS lead</div></div>
+    <div style="background:var(--card); padding:18px 20px;"><div style="font-family:var(--mono); font-size:11px; color:var(--text-faint); margin-bottom:6px;">TIMELINE</div><div style="font-size:14px; color:var(--text);">Mar – Dec 2025</div></div>
+    <div style="background:var(--card); padding:18px 20px;"><div style="font-family:var(--mono); font-size:11px; color:var(--text-faint); margin-bottom:6px;">STATUS</div><div style="font-size:14px; color:var(--text);">App Store launch</div></div>
+  </div>
+
+  <div style="max-width:780px; margin:0 auto; padding:20px 28px 20px;">
+    <div style="aspect-ratio:16/9; background-image:repeating-linear-gradient(135deg, var(--bg-alt) 0px, var(--bg-alt) 16px, var(--card) 16px, var(--card) 32px); border:1px solid var(--border); border-radius:16px; display:flex; align-items:center; justify-content:center;">
+      <span style="font-family:var(--mono); font-size:12px; color:var(--text-faint); background:var(--card); padding:6px 12px; border-radius:6px; border:1px solid var(--border);">APP SCREENSHOTS — RULAA</span>
+    </div>
+  </div>
+
+  <div style="max-width:780px; margin:0 auto; padding:30px 28px 100px;">
+
+    <h2 style="font-family:var(--display); font-size:22px; font-weight:600; margin:0 0 14px;">The problem</h2>
+    <p style="font-size:16.5px; line-height:1.75; color:var(--text-muted); margin:0 0 40px;">Online clothing shoppers routinely order the wrong size because there's no reliable, camera-based way to translate a photo into accurate body measurements. Rulaa set out to close that gap with an on-device measurement and recommendation pipeline.</p>
+
+    <h2 style="font-family:var(--display); font-size:22px; font-weight:600; margin:0 0 14px;">What I built</h2>
+    <p style="font-size:16.5px; line-height:1.75; color:var(--text-muted); margin:0 0 16px;">I led the end-to-end AI/ML development lifecycle: benchmarking candidate models, evaluating their accuracy and latency trade-offs, and researching ML infrastructure and server architecture for scalable inference. The service was containerized with Docker to run serverless, keeping cost and cold-start latency low under variable load.</p>
+    <p style="font-size:16.5px; line-height:1.75; color:var(--text-muted); margin:0 0 40px;">On the client side, I developed the iOS app in SwiftUI and UIKit, using Vision for on-device measurement capture, structured around an MVVM architecture with secure API integration to the production ML endpoints.</p>
+
+    <h2 style="font-family:var(--display); font-size:22px; font-weight:600; margin:0 0 14px;">Stack</h2>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:40px;">
+      <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">SwiftUI</span>
+      <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">UIKit</span>
+      <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">Vision</span>
+      <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">Docker</span>
+      <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">REST API</span>
+      <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">MVVM</span>
+    </div>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; border-top:1px solid var(--border); padding-top:28px;">
+      <a href="project-buah-hati.dc.html" style="font-family:var(--mono); font-size:13px; color:var(--text);">← Next: Buah Hati</a>
+      <a href="index.dc.html#work" style="font-family:var(--mono); font-size:13px; color:var(--text-muted);">Back to all work</a>
+    </div>
+  </div>
+
+</div>
+
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab — Hendrik Nicolas Carlo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  a { color: oklch(56% 0.15 300); text-decoration: none; }
+  a:hover { color: oklch(46% 0.15 300); }
+  @media (max-width: 780px) {
+    .hc-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+</helmet>
+
+<div style="--bg:oklch(97.6% 0.005 90); --bg-alt:oklch(93.8% 0.007 90); --card:oklch(99% 0.003 90); --text:oklch(21% 0.012 90); --text-muted:oklch(46% 0.012 90); --text-faint:oklch(62% 0.01 90); --border:oklch(87% 0.007 90); --accent:oklch(56% 0.15 300); --accent-dim:oklch(46% 0.13 300); --accent-soft:oklch(93% 0.035 300); --mono:'Source Sans 3',system-ui,sans-serif; --sans:'Source Sans 3',system-ui,sans-serif; --display:'Sora',system-ui,sans-serif; background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh;">
+
+  <div style="position:sticky; top:0; z-index:50; backdrop-filter:blur(10px); background:color-mix(in oklch, var(--bg) 82%, transparent); border-bottom:1px solid var(--border);">
+    <div style="max-width:900px; margin:0 auto; padding:18px 28px; display:flex; align-items:center; justify-content:space-between;">
+      <a href="index.dc.html" style="font-family:var(--display); font-weight:600; font-size:18px; color:var(--text); letter-spacing:-0.02em;">Hendrik&nbsp;Carlo</a>
+      <a href="index.dc.html" style="font-family:var(--mono); font-size:13px; color:var(--text-muted);">← Home</a>
+    </div>
+  </div>
+
+  <div style="max-width:780px; margin:0 auto; padding:80px 28px 30px;">
+    <div style="font-family:var(--mono); font-size:13px; font-weight:600; color:var(--accent); letter-spacing:0.06em; margin-bottom:16px;">LAB</div>
+    <h1 style="font-family:var(--display); font-size:44px; font-weight:600; letter-spacing:-0.02em; line-height:1.1; margin:0 0 16px;">Interactive demos, coming soon.</h1>
+    <p style="font-size:17px; line-height:1.65; color:var(--text-muted); margin:0 0 50px; max-width:560px;">I'm building a small set of in-browser demos of the on-device and applied-AI work below — real inference running client-side, not screenshots. Each one goes live here once it's ready to stand on its own.</p>
+  </div>
+
+  <div class="hc-grid" style="max-width:780px; margin:0 auto; padding:0 28px 100px; display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+
+    <div style="border:1px dashed var(--border); border-radius:16px; padding:26px; background:var(--card);">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+        <span style="font-family:var(--mono); font-size:11px; color:var(--text-faint); background:var(--bg-alt); padding:4px 10px; border-radius:100px;">IN PROGRESS</span>
+        <span style="font-family:var(--mono); font-size:11px; color:var(--text-faint);">CoreML</span>
+      </div>
+      <h3 style="font-family:var(--display); font-size:18px; font-weight:600; margin:0 0 8px;">Ripeness classifier, in-browser</h3>
+      <p style="font-size:14px; line-height:1.6; color:var(--text-muted); margin:0;">A WebAssembly port of the Buah Hati vision model — drop in a photo, get an on-device ripeness read, no server round-trip.</p>
+    </div>
+
+    <div style="border:1px dashed var(--border); border-radius:16px; padding:26px; background:var(--card);">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+        <span style="font-family:var(--mono); font-size:11px; color:var(--text-faint); background:var(--bg-alt); padding:4px 10px; border-radius:100px;">PLANNED</span>
+        <span style="font-family:var(--mono); font-size:11px; color:var(--text-faint);">VLM</span>
+      </div>
+      <h3 style="font-family:var(--display); font-size:18px; font-weight:600; margin:0 0 8px;">JKTDrive scene reasoning</h3>
+      <p style="font-size:14px; line-height:1.6; color:var(--text-muted); margin:0;">A light walkthrough of how the JKTDrive VLM reasons over Jakarta driving scenes, drawn from the ICCAI paper.</p>
+    </div>
+
+  </div>
+
+  <div style="max-width:780px; margin:0 auto; padding:0 28px 90px;">
+    <div style="border-top:1px solid var(--border); padding-top:28px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
+      <p style="font-size:14px; color:var(--text-muted); margin:0;">Have something specific you'd like to see demoed? <a href="/cdn-cgi/l/email-protection#3d555853594f54565e5c4f51520d7d5a505c5451135e5250">Email me</a>.</p>
+      <a href="index.dc.html#work" style="font-family:var(--mono); font-size:13px; color:var(--text);">See finished work →</a>
+    </div>
+  </div>
+
+</div>
+
+</x-dc>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</html>

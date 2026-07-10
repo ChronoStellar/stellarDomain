@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hendrik Nicolas Carlo — Fullstack & AI Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  a { color: oklch(56% 0.15 300); text-decoration: none; }
+  a:hover { color: oklch(46% 0.15 300); }
+  ::selection { background: oklch(92% 0.035 300); }
+  @media (max-width: 860px) {
+    .hc-hero-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+    .hc-work-grid { grid-template-columns: 1fr !important; }
+    .hc-stats { grid-template-columns: repeat(2,1fr) !important; }
+    .hc-contact-row { flex-direction: column !important; align-items: flex-start !important; gap: 20px !important; }
+    .hc-h1 { font-size: 40px !important; }
+  }
+  @media (max-width: 640px) {
+    .hc-nav-links { gap: 16px !important; font-size: 12px !important; }
+    .hc-nav-links a[href="#publications"] { display: none; }
+  }
+</style>
+</helmet>
+
+<div style="--bg:oklch(97.6% 0.005 90); --bg-alt:oklch(93.8% 0.007 90); --card:oklch(99% 0.003 90); --text:oklch(21% 0.012 90); --text-muted:oklch(46% 0.012 90); --text-faint:oklch(62% 0.01 90); --border:oklch(87% 0.007 90); --accent:oklch(56% 0.15 300); --accent-dim:oklch(46% 0.13 300); --accent-soft:oklch(93% 0.035 300); --mono:'Source Sans 3',system-ui,sans-serif; --sans:'Source Sans 3',system-ui,sans-serif; --display:'Sora',system-ui,sans-serif; background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh;">
+
+  <!-- NAV -->
+  <div style="position:sticky; top:0; z-index:50; backdrop-filter:blur(10px); background:color-mix(in oklch, var(--bg) 82%, transparent); border-bottom:1px solid var(--border);">
+    <div style="max-width:1120px; margin:0 auto; padding:18px 28px; display:flex; align-items:center; justify-content:space-between;">
+      <a href="#home" style="font-family:var(--display); font-weight:600; font-size:18px; color:var(--text); letter-spacing:-0.02em;">Hendrik&nbsp;Carlo</a>
+      <div class="hc-nav-links" style="display:flex; align-items:center; gap:32px; font-family:var(--mono); font-size:13px; letter-spacing:0.02em; color:var(--text-muted);">
+        <a href="#work" style="color:var(--text-muted);">Work</a>
+        <a href="#publications" style="color:var(--text-muted);">Publications</a>
+        <a href="#about" style="color:var(--text-muted);">About</a>
+        <a href="demos.dc.html" style="color:var(--text-muted);">Lab</a>
+        <a href="#contact" style="display:inline-flex; align-items:center; gap:7px; color:var(--text); border:1px solid var(--border); padding:8px 14px; border-radius:100px; background:var(--card);">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div id="home" style="max-width:1120px; margin:0 auto; padding:96px 28px 80px;">
+    <div class="hc-hero-grid" style="display:grid; grid-template-columns:1.4fr 1fr; gap:60px; align-items:start;">
+      <div>
+        <div style="font-family:var(--mono); font-size:13px; font-weight:600; color:var(--accent); letter-spacing:0.06em; margin-bottom:20px;">
+          AVAILABLE FOR OPPORTUNITIES · JAKARTA, ID
+        </div>
+        <h1 class="hc-h1" style="font-family:var(--display); font-weight:600; font-size:60px; line-height:1.05; letter-spacing:-0.02em; margin:0 0 22px; color:var(--text);">
+          Fullstack &amp; AI Engineer building shippable intelligence.
+        </h1>
+        <p style="font-size:18px; line-height:1.6; color:var(--text-muted); max-width:560px; margin:0 0 34px;">
+          Computer Science undergraduate and Apple Developer Academy graduate specializing in applied AI, computer vision, and ML deployment — bridging research-grade models with production iOS apps and cloud infrastructure.
+        </p>
+        <div style="display:flex; gap:14px; flex-wrap:wrap;">
+          <a href="#work" style="font-family:var(--mono); font-size:13px; padding:13px 22px; background:var(--text); color:var(--bg); border-radius:100px; display:inline-flex; align-items:center; gap:8px;">View Selected Work →</a>
+          <a href="uploads/Apple_C8_s_CV.pdf" style="font-family:var(--mono); font-size:13px; padding:13px 22px; border:1px solid var(--border); color:var(--text); border-radius:100px; display:inline-flex; align-items:center; gap:8px;" download>Download Résumé</a>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px; font-family:var(--mono); font-size:13px; color:var(--text-muted); border-left:1px solid var(--border); padding-left:24px; margin-top:12px;">
+        <div style="display:flex; justify-content:space-between; gap:12px;"><span style="color:var(--text-faint);">Email</span><a href="/cdn-cgi/l/email-protection#80e8e5eee4f2e9ebe3e1f2ecefb0c0e7ede1e9ecaee3efed" style="color:var(--text);"><span class="__cf_email__" data-cfemail="137b767d77617a787072617f7c2353747e727a7f3d707c7e">[email&#160;protected]</span></a></div>
+        <div style="display:flex; justify-content:space-between; gap:12px;"><span style="color:var(--text-faint);">GitHub</span><a href="https://github.com/ChronoStellar" style="color:var(--text);" target="_blank" rel="noopener">ChronoStellar</a></div>
+        <div style="display:flex; justify-content:space-between; gap:12px;"><span style="color:var(--text-faint);">LinkedIn</span><a href="https://linkedin.com/in/hendrik-nicolas-carlo-95ba3a275/" style="color:var(--text);" target="_blank" rel="noopener">hendrik-nicolas-carlo</a></div>
+        <div style="display:flex; justify-content:space-between; gap:12px;"><span style="color:var(--text-faint);">Phone</span><span style="color:var(--text);">+62 878 2487 6058</span></div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="hc-stats" style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin-top:80px; border:1px solid var(--border); border-radius:14px; overflow:hidden; background:var(--border);">
+      <div style="background:var(--card); padding:22px 20px;"><div style="font-family:var(--display); font-size:28px; font-weight:600; color:var(--text);">3.95</div><div style="font-family:var(--mono); font-size:12px; color:var(--text-muted); margin-top:6px;">GPA / 4.00</div></div>
+      <div style="background:var(--card); padding:22px 20px;"><div style="font-family:var(--display); font-size:28px; font-weight:600; color:var(--text);">5</div><div style="font-family:var(--mono); font-size:12px; color:var(--text-muted); margin-top:6px;">iOS apps shipped in 10 mo</div></div>
+      <div style="background:var(--card); padding:22px 20px;"><div style="font-family:var(--display); font-size:28px; font-weight:600; color:var(--text);">2</div><div style="font-family:var(--mono); font-size:12px; color:var(--text-muted); margin-top:6px;">IEEE publications</div></div>
+      <div style="background:var(--card); padding:22px 20px;"><div style="font-family:var(--display); font-size:28px; font-weight:600; color:var(--text);">Top 60</div><div style="font-family:var(--mono); font-size:12px; color:var(--text-muted); margin-top:6px;">ICPC 2023 (BINUS)</div></div>
+    </div>
+  </div>
+
+  <!-- WORK -->
+  <div id="work" style="max-width:1120px; margin:0 auto; padding:40px 28px 90px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:36px; border-bottom:1px solid var(--border); padding-bottom:18px;">
+      <h2 style="font-family:var(--display); font-size:14px; font-weight:600; letter-spacing:0.08em; color:var(--text-faint); text-transform:uppercase; margin:0;">Selected Work</h2>
+      <span style="font-family:var(--mono); font-size:13px; color:var(--text-faint);">Apple Developer Academy @BINUS</span>
+    </div>
+
+    <div class="hc-work-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:28px;">
+
+      <a href="project-rulaa.dc.html" style="display:flex; flex-direction:column; border:1px solid var(--border); border-radius:16px; overflow:hidden; background:var(--card); transition:transform .15s ease;">
+        <div style="aspect-ratio:16/10; background-image:repeating-linear-gradient(135deg, var(--bg-alt) 0px, var(--bg-alt) 14px, var(--card) 14px, var(--card) 28px); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border);">
+          <span style="font-family:var(--mono); font-size:12px; color:var(--text-faint); background:var(--card); padding:6px 12px; border-radius:6px; border:1px solid var(--border);">PRODUCT SHOT — RULAA APP</span>
+        </div>
+        <div style="padding:26px 26px 28px;">
+          <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+            <span style="font-family:var(--mono); font-size:11px; color:var(--accent-dim); background:var(--accent-soft); padding:4px 10px; border-radius:100px;">SwiftUI · Vision</span>
+            <span style="font-family:var(--mono); font-size:11px; color:var(--accent-dim); background:var(--accent-soft); padding:4px 10px; border-radius:100px;">Docker · ML Infra</span>
+          </div>
+          <h3 style="font-family:var(--display); font-size:22px; font-weight:600; margin:0 0 8px; color:var(--text);">Rulaa</h3>
+          <p style="font-size:14.5px; line-height:1.6; color:var(--text-muted); margin:0 0 16px;">Clothing size recommendation &amp; body measurement app. Led the end-to-end AI/ML lifecycle — benchmarking, server architecture, and Docker-based serverless inference — with a secure SwiftUI/Vision client on MVVM.</p>
+          <span style="font-family:var(--mono); font-size:12.5px; color:var(--text); display:inline-flex; align-items:center; gap:6px;">Read case study →</span>
+        </div>
+      </a>
+
+      <a href="project-buah-hati.dc.html" style="display:flex; flex-direction:column; border:1px solid var(--border); border-radius:16px; overflow:hidden; background:var(--card); transition:transform .15s ease;">
+        <div style="aspect-ratio:16/10; background-image:repeating-linear-gradient(135deg, var(--bg-alt) 0px, var(--bg-alt) 14px, var(--card) 14px, var(--card) 28px); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border);">
+          <span style="font-family:var(--mono); font-size:12px; color:var(--text-faint); background:var(--card); padding:6px 12px; border-radius:6px; border:1px solid var(--border);">PRODUCT SHOT — BUAH HATI APP</span>
+        </div>
+        <div style="padding:26px 26px 28px;">
+          <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+            <span style="font-family:var(--mono); font-size:11px; color:var(--accent-dim); background:var(--accent-soft); padding:4px 10px; border-radius:100px;">CoreML · On-device</span>
+            <span style="font-family:var(--mono); font-size:11px; color:var(--accent-dim); background:var(--accent-soft); padding:4px 10px; border-radius:100px;">SwiftData</span>
+          </div>
+          <h3 style="font-family:var(--display); font-size:22px; font-weight:600; margin:0 0 8px; color:var(--text);">Buah Hati</h3>
+          <p style="font-size:14.5px; line-height:1.6; color:var(--text-muted); margin:0 0 16px;">Avocado ripeness classification app. Owned the data engineering and ML pipeline — dataset cleaning, automated annotation, and on-device CoreML deployment — for offline-first, low-latency inference.</p>
+          <span style="font-family:var(--mono); font-size:12.5px; color:var(--text); display:inline-flex; align-items:center; gap:6px;">Read case study →</span>
+        </div>
+      </a>
+
+    </div>
+
+    <div style="margin-top:24px; border:1px dashed var(--border); border-radius:16px; padding:22px 26px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
+      <p style="font-size:14px; color:var(--text-muted); margin:0; max-width:640px;">Also founded and led the internal <strong style="color:var(--text);">Machine Learning Club</strong>, running workshops on the Apple AI ecosystem, and prototyped 2 macOS apps using CoreML, Vision, and CreateML.</p>
+      <a href="demos.dc.html" style="font-family:var(--mono); font-size:12.5px; color:var(--text); white-space:nowrap;">See the Lab →</a>
+    </div>
+  </div>
+
+  <!-- PUBLICATIONS -->
+  <div id="publications" style="max-width:1120px; margin:0 auto; padding:10px 28px 90px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:36px; border-bottom:1px solid var(--border); padding-bottom:18px;">
+      <h2 style="font-family:var(--display); font-size:14px; font-weight:600; letter-spacing:0.08em; color:var(--text-faint); text-transform:uppercase; margin:0;">Publications</h2>
+      <span style="font-family:var(--mono); font-size:13px; color:var(--text-faint);">IEEE</span>
+    </div>
+
+    <a href="publication-icoris.dc.html" style="display:flex; gap:24px; align-items:flex-start; padding:22px 0; border-bottom:1px solid var(--border);">
+      <span style="font-family:var(--mono); font-size:13px; color:var(--text-faint); width:52px; flex-shrink:0; padding-top:3px;">2024</span>
+      <div style="flex:1;">
+        <h3 style="font-family:var(--display); font-size:18px; font-weight:600; margin:0 0 6px; color:var(--text);">Comparative Analysis of Fungal Infections Classification in Apple Leaves</h3>
+        <p style="font-size:14px; color:var(--text-muted); margin:0 0 8px; line-height:1.55;">6th International Conference on Cybernetics and Intelligent System (ICORIS), IEEE — comparing standard CNNs vs. CNNs with GLCM texture analysis for feature-extraction efficiency.</p>
+        <span style="font-family:var(--mono); font-size:12px; color:var(--text-faint);">Carlo, H. N., Andreas, K., &amp; Zakiyyah, A. Y.</span>
+      </div>
+      <span style="font-family:var(--mono); font-size:12.5px; color:var(--text); flex-shrink:0; padding-top:3px;">Read →</span>
+    </a>
+
+    <div style="display:flex; gap:24px; align-items:flex-start; padding:22px 0;">
+      <span style="font-family:var(--mono); font-size:13px; color:var(--text-faint); width:52px; flex-shrink:0; padding-top:3px;">2026</span>
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+          <h3 style="font-family:var(--display); font-size:18px; font-weight:600; margin:0; color:var(--text);">JKTDrive: Early Explorations of Visual-Language Models on Autonomous Driving in Indonesia</h3>
+          <span style="font-family:var(--mono); font-size:10.5px; color:var(--accent-dim); background:var(--accent-soft); padding:3px 9px; border-radius:100px; flex-shrink:0;">ACCEPTED</span>
+        </div>
+        <p style="font-size:14px; color:var(--text-muted); margin:0 0 8px; line-height:1.55;">12th International Conference on Computing and Artificial Intelligence (ICCAI), IEEE — benchmarking VLM performance as a reasoning model for autonomous driving agents in Indonesia.</p>
+        <span style="font-family:var(--mono); font-size:12px; color:var(--text-faint);">Carlo, H. N., Sanjaya, J. S., Tanjaya, V., &amp; Cenggoro, T. W.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div id="about" style="max-width:1120px; margin:0 auto; padding:10px 28px 90px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:36px; border-bottom:1px solid var(--border); padding-bottom:18px;">
+      <h2 style="font-family:var(--display); font-size:14px; font-weight:600; letter-spacing:0.08em; color:var(--text-faint); text-transform:uppercase; margin:0;">About</h2>
+      <span style="font-family:var(--mono); font-size:13px; color:var(--text-faint);">Bina Nusantara University</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:60px;">
+      <div>
+        <p style="font-size:17px; line-height:1.7; color:var(--text-muted); margin:0 0 20px;">I'm a Computer Science undergraduate at Bina Nusantara University (B.Tech, Information Technology, GPA 3.95/4.00, Sept 2022 – Feb 2026) and a graduate of the Apple Developer Academy, where I worked as a Junior AI Engineer &amp; iOS Developer.</p>
+        <p style="font-size:17px; line-height:1.7; color:var(--text-muted); margin:0;">My work sits at the intersection of applied ML and product engineering: taking research-grade models — computer vision, VLMs — and shipping them as fast, reliable software on iOS and the cloud, using CoreML, Swift, Docker, and FastAPI.</p>
+        <div style="display:flex; gap:10px; margin-top:28px; flex-wrap:wrap;">
+          <span style="font-family:var(--mono); font-size:12px; color:var(--text-muted); border:1px solid var(--border); padding:6px 12px; border-radius:100px; white-space:nowrap;">Top 20 · Microsoft AI for Accessibility, 2024</span>
+          <span style="font-family:var(--mono); font-size:12px; color:var(--text-muted); border:1px solid var(--border); padding:6px 12px; border-radius:100px; white-space:nowrap;">Semi-finalist · Samsung Solve for Tomorrow, 2025</span>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:22px;">
+        <div>
+          <div style="font-family:var(--mono); font-size:12px; color:var(--text-faint); letter-spacing:0.05em; margin-bottom:10px;">LANGUAGES</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">Python</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">Swift</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">C++</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">SQL</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">JavaScript</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">Java</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">Bash</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono); font-size:12px; color:var(--text-faint); letter-spacing:0.05em; margin-bottom:10px;">AI &amp; DATA</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">PyTorch</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">TensorFlow</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">Keras</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">Scikit-Learn</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">OpenCV</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">CoreML</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px; white-space:nowrap;">Pandas / NumPy</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono); font-size:12px; color:var(--text-faint); letter-spacing:0.05em; margin-bottom:10px;">BACKEND &amp; TOOLS</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">FastAPI</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px; white-space:nowrap;">RESTful APIs</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">Docker</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">Git</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">AWS</span>
+            <span style="font-size:13.5px; color:var(--text); border:1px solid var(--border); background:var(--card); padding:6px 13px; border-radius:100px;">GCP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="contact" style="background:var(--text); color:var(--bg);">
+    <div style="max-width:1120px; margin:0 auto; padding:90px 28px 60px;">
+      <div class="hc-contact-row" style="display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-bottom:60px;">
+        <h2 style="font-family:var(--display); font-size:44px; font-weight:600; letter-spacing:-0.02em; margin:0; max-width:520px; line-height:1.1;">Let's build something worth shipping.</h2>
+        <a href="/cdn-cgi/l/email-protection#355d505b51475c5e565447595a05755258545c591b565a58" style="font-family:var(--mono); font-size:14px; padding:14px 24px; background:var(--bg); color:var(--text); border-radius:100px; white-space:nowrap;"><span class="__cf_email__" data-cfemail="93fbf6fdf7e1faf8f0f2e1fffca3d3f4fef2faffbdf0fcfe">[email&#160;protected]</span></a>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; border-top:1px solid color-mix(in oklch, var(--bg) 20%, transparent); padding-top:24px;">
+        <span style="font-family:var(--mono); font-size:12px; color:color-mix(in oklch, var(--bg) 60%, transparent);">© 2026 Hendrik Nicolas Carlo · Jakarta, Indonesia</span>
+        <div style="display:flex; gap:22px; font-family:var(--mono); font-size:12.5px;">
+          <a href="https://github.com/ChronoStellar" style="color:var(--bg);" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://linkedin.com/in/hendrik-nicolas-carlo-95ba3a275/" style="color:var(--bg);" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="uploads/Apple_C8_s_CV.pdf" style="color:var(--bg);" download>Résumé (PDF)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</x-dc>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</html>
