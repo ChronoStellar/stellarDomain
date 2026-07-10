@@ -55,29 +55,32 @@ stellarDomain/
 ## 4. Implementation Phases
 
 ### Phase 1: Foundation & Setup
-- Initialize the Next.js project with App Router.
-- Install necessary dependencies: `three`, `gray-matter`, `remark`, `remark-html`.
-- Set up the global CSS based on the `v2-starry` color palette (oklch colors, modern fonts like Sora and Source Sans 3).
+- [x] Initialize the Next.js project with App Router.
+- [x] Install necessary dependencies: `three`, `gray-matter`, `remark`, `remark-html`.
+- [x] Set up the global CSS based on the `v2-starry` color palette (oklch colors, modern fonts like Sora and Source Sans 3).
 
 ### Phase 2: The Three.js Integration
-- Create the `ThreeBackground` React component.
-- Extract the starry canvas logic from `v2-starry` and port it into a React `useEffect` hook to ensure it runs correctly on the client side without interfering with React's lifecycle.
+- [x] Create the `ThreeBackground` React component.
+- [x] Extract the starry canvas logic from `v2-starry` and port it into a React `useEffect` hook.
+- [x] Update ThreeBackground to support local absolute positioning and custom colors for sections.
 
 ### Phase 3: The Content Layer ("Plug and Play" System)
-- Create utility functions in `lib/content.ts` to read the `content/` directory.
-- Implement a parser that takes an `.md` file, extracts the frontmatter for metadata (title, tags, image), and converts the body to HTML/React.
-- Create the JSON reader for the main profile data.
+- [x] Create utility functions in `lib/content.ts` to read the `content/` directory.
+- [x] Implement a parser that takes an `.md` file, extracts the frontmatter for metadata, and converts the body to HTML.
+- [x] Create the JSON reader for the main profile data.
 
 ### Phase 4: Page Assembly & Routing
-- **Home Page**: Integrate the Three.js background, the navigation, and dynamically list the top projects/publications by calling the content utilities.
-- **Dynamic Project Pages**: Implement `app/projects/[slug]/page.tsx` to automatically render any Markdown file dropped into `content/projects/`.
+- [x] **Home Page**: Integrate the Three.js background, the navigation, and dynamically list the top projects by calling the content utilities.
+- [x] **Dynamic Project Pages**: Implement `app/projects/[slug]/page.tsx` to automatically render any Markdown file.
 
 ### Phase 5: Polish & Premium Feel
-- Add micro-animations (hover effects, smooth transitions).
-- Ensure perfect responsiveness.
-- Apply SEO best practices (dynamic meta tags based on the Markdown frontmatter).
+- [x] Build and integrate the global Footer component matching the `v2-starry` aesthetic.
+- [ ] Implement publications support in the content layer.
+- [ ] Add micro-animations (hover effects, smooth transitions).
+- [ ] Ensure perfect responsiveness on mobile devices.
+- [ ] Apply SEO best practices (dynamic meta tags based on the Markdown frontmatter).
 
 ## 5. Next Steps for Us
-1. Discuss and confirm this plan (specifically if you are happy with using Next.js).
-2. Once confirmed, I will run the `npx create-next-app` command to bootstrap the project in the workspace.
-3. We will then start migrating the CSS and Three.js logic from your samples.
+1. Build out the Publications content layer and display it on the homepage.
+2. Refine animations and responsiveness.
+3. Test adding additional markdown and JSON content.

@@ -77,3 +77,26 @@ a:hover {
 @media (max-width: 640px) {
   .nav-links { gap: 16px !important; font-size: 12px !important; }
 }
+
+/* Markdown Content Styling */
+.markdown-content h1, .markdown-content h2, .markdown-content h3 {
+  font-family: var(--display);
+  color: var(--text);
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+
+.markdown-content h2 {
+  font-size: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.markdown-content ul, .markdown-content ol {
+  padding-left: 20px;
+  margin-bottom: 1.5em;
+}
+
+.markdown-content li {
+  margin-bottom: 0.5em;
+}

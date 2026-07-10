@@ -1,0 +1,14 @@
+{
+  "name": "Hendrik Nicolas Carlo",
+  "tagline": "Fullstack & AI Engineer building shippable intelligence.",
+  "bio": [
+    "Computer Science undergraduate and Apple Developer Academy graduate specializing in applied AI, computer vision, and ML deployment — bridging research-grade models with production iOS apps and cloud infrastructure."
+  ],
+  "email": "contact@example.com",
+  "github": "https://github.com/ChronoStellar",
+  "linkedin": "https://linkedin.com/in/hendrik-nicolas-carlo",
+  "stats": [
+    { "value": "3.95", "label": "GPA / 4.00", "subtext": "" },
+    { "value": "5", "label": "iOS apps shipped", "subtext": "in 10 mo" }
+  ]
+}
