@@ -10,7 +10,7 @@ export default function Footer() {
       
       <div className="container" style={{ padding: '90px 28px 60px', position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '40px', marginBottom: '60px', flexWrap: 'wrap' }}>
-          <h2 className="heading-display" style={{ fontSize: '44px', margin: 0, maxWidth: '520px', lineHeight: 1.1 }}>
+          <h2 className="heading-display" style={{ fontSize: '44px', color: 'White', margin: 0, maxWidth: '520px', lineHeight: 1.1 }}>
             Let's build something worth shipping.
           </h2>
           <a 

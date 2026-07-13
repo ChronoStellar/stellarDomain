@@ -75,12 +75,10 @@ stellarDomain/
 
 ### Phase 5: Polish & Premium Feel
 - [x] Build and integrate the global Footer component matching the `v2-starry` aesthetic.
-- [ ] Implement publications support in the content layer.
-- [ ] Add micro-animations (hover effects, smooth transitions).
-- [ ] Ensure perfect responsiveness on mobile devices.
-- [ ] Apply SEO best practices (dynamic meta tags based on the Markdown frontmatter).
+- [x] Implement publications support in the content layer.
+- [x] Add micro-animations (hover effects, smooth transitions).
+- [x] Ensure perfect responsiveness on mobile devices.
+- [x] Apply SEO best practices (dynamic meta tags based on the Markdown frontmatter).
 
 ## 5. Next Steps for Us
-1. Build out the Publications content layer and display it on the homepage.
-2. Refine animations and responsiveness.
-3. Test adding additional markdown and JSON content.
+1. Test adding additional markdown and JSON content.

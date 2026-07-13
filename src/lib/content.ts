@@ -14,10 +14,21 @@ export interface ProjectMetadata {
   slug: string;
 }
 
+export interface PublicationMetadata {
+  title: string;
+  date: string;
+  venue: string;
+  url: string;
+  summary: string;
+  slug: string;
+}
+
 export interface ProfileData {
   name: string;
   tagline: string;
   bio: string[];
+  about: string[];
+  competencies: { name: string; description: string }[];
   email: string;
   github: string;
   linkedin: string;
@@ -31,6 +42,8 @@ export function getProfileData(): ProfileData {
       name: 'Your Name',
       tagline: 'Your Tagline',
       bio: [],
+      about: [],
+      competencies: [],
       email: '',
       github: '',
       linkedin: '',
@@ -87,5 +100,49 @@ export async function getProjectBySlug(slug: string) {
     slug,
     contentHtml,
     ...(matterResult.data as Omit<ProjectMetadata, 'slug'>),
+  };
+}
+
+export function getAllPublications(): PublicationMetadata[] {
+  const publicationsDir = path.join(contentDirectory, 'publications');
+  if (!fs.existsSync(publicationsDir)) return [];
+
+  const fileNames = fs.readdirSync(publicationsDir);
+  const allPublicationsData = fileNames
+    .filter(fileName => fileName.endsWith('.md'))
+    .map(fileName => {
+      const slug = fileName.replace(/\.md$/, '');
+      const fullPath = path.join(publicationsDir, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+
+      const matterResult = matter(fileContents);
+
+      return {
+        slug,
+        ...(matterResult.data as Omit<PublicationMetadata, 'slug'>),
+      };
+    });
+
+  return allPublicationsData.sort((a, b) => {
+    if (a.date < b.date) return 1;
+    return -1;
+  });
+}
+
+export async function getPublicationBySlug(slug: string) {
+  const fullPath = path.join(contentDirectory, 'publications', `${slug}.md`);
+  const fileContents = fs.readFileSync(fullPath, 'utf8');
+
+  const matterResult = matter(fileContents);
+
+  const processedContent = await remark()
+    .use(html)
+    .process(matterResult.content);
+  const contentHtml = processedContent.toString();
+
+  return {
+    slug,
+    contentHtml,
+    ...(matterResult.data as Omit<PublicationMetadata, 'slug'>),
   };
 }

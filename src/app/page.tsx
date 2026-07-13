@@ -1,10 +1,13 @@
 import ThreeBackground from '@/components/ThreeBackground';
-import { getProfileData, getAllProjects } from '@/lib/content';
+import { getProfileData, getAllProjects, getAllPublications } from '@/lib/content';
 import Link from 'next/link';
+import WorkSection from '@/components/WorkSection';
+import AboutSection from '@/components/AboutSection';
 
 export default function Home() {
   const profile = getProfileData();
   const projects = getAllProjects();
+  const publications = getAllPublications();
 
   return (
     <main>
@@ -15,8 +18,9 @@ export default function Home() {
         <div className="container" style={{ padding: '18px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <a href="/" className="heading-display" style={{ fontSize: '18px' }}>{profile.name}</a>
           <div style={{ display: 'flex', gap: '32px', fontSize: '13px' }} className="text-mono">
-            <a href="#work" style={{ color: 'var(--text-muted)' }}>Work</a>
-            <a href="#about" style={{ color: 'var(--text-muted)' }}>About</a>
+            <a href="#work" className="nav-link" style={{ color: 'var(--text-muted)' }}>Work</a>
+            <a href="#publications" className="nav-link" style={{ color: 'var(--text-muted)' }}>Publications</a>
+            <a href="#about" className="nav-link" style={{ color: 'var(--text-muted)' }}>About</a>
           </div>
         </div>
       </nav>
@@ -39,7 +43,7 @@ export default function Home() {
           </div>
           
           {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1px', marginTop: '12px', border: '1px solid var(--border)', borderRadius: '14px', overflow: 'hidden', background: 'var(--border)' }}>
+          <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1px', marginTop: '12px', border: '1px solid var(--border)', borderRadius: '14px', overflow: 'hidden', background: 'var(--border)' }}>
             {profile.stats.map((stat, idx) => (
               <div key={idx} style={{ background: 'var(--card)', padding: '22px 20px' }}>
                 <div className="heading-display" style={{ fontSize: '28px' }}>{stat.value}</div>
@@ -50,32 +54,37 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Work Section */}
-      <section id="work" className="container" style={{ padding: '40px 28px 90px', position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '36px', borderBottom: '1px solid var(--border)', paddingBottom: '18px' }}>
-          <h2 className="heading-display" style={{ fontSize: '14px', letterSpacing: '0.08em', color: 'var(--text-faint)', textTransform: 'uppercase', margin: 0 }}>Selected Work</h2>
-        </div>
+      {/* Work Section (Interactive) */}
+      <WorkSection projects={projects} />
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '28px' }} className="work-grid">
-          {projects.map((project) => (
-            <Link href={`/projects/${project.slug}`} key={project.slug} style={{ display: 'flex', flexDirection: 'column', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden', background: 'var(--card)', color: 'inherit' }}>
-              <div style={{ aspectRatio: '16/10', backgroundImage: 'repeating-linear-gradient(135deg, var(--bg-alt) 0px, var(--bg-alt) 14px, var(--card) 14px, var(--card) 28px)', borderBottom: '1px solid var(--border)' }} />
-              <div style={{ padding: '26px 26px 28px' }}>
-                <div style={{ display: 'flex', gap: '8px', marginBottom: '14px', flexWrap: 'wrap' }}>
-                  {project.tags.map((tag) => (
-                    <span key={tag} className="text-mono" style={{ fontSize: '11px', color: 'var(--accent-dim)', background: 'var(--accent-soft)', padding: '4px 10px', borderRadius: '100px' }}>
-                      {tag}
-                    </span>
-                  ))}
+      {/* Publications Section */}
+      {publications.length > 0 && (
+        <section id="publications" className="container" style={{ padding: '0 28px 90px', position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '36px', borderBottom: '1px solid var(--border)', paddingBottom: '18px' }}>
+            <h2 className="heading-display" style={{ fontSize: '14px', letterSpacing: '0.08em', color: 'var(--text-faint)', textTransform: 'uppercase', margin: 0 }}>Publications</h2>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {publications.map((pub) => (
+              <div key={pub.slug} className="card-hover" style={{ display: 'flex', flexDirection: 'column', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden', background: 'var(--card)', padding: '26px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <span className="text-mono" style={{ fontSize: '12px', color: 'var(--accent-dim)' }}>{pub.date} • {pub.venue}</span>
                 </div>
-                <h3 className="heading-display" style={{ fontSize: '22px', margin: '0 0 8px' }}>{project.title}</h3>
-                <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: 'var(--text-muted)', margin: '0 0 16px' }}>{project.summary}</p>
-                <span className="text-mono" style={{ fontSize: '12.5px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>Read case study →</span>
+                <h3 className="heading-display" style={{ fontSize: '20px', margin: '0 0 10px' }}>{pub.title}</h3>
+                <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: 'var(--text-muted)', margin: '0 0 16px' }}>{pub.summary}</p>
+                {pub.url && (
+                  <a href={pub.url} target="_blank" rel="noopener noreferrer" className="text-mono link-hover" style={{ fontSize: '12.5px', display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--text-main)', textDecoration: 'none' }}>
+                    Read article ↗
+                  </a>
+                )}
               </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* About Section */}
+      <AboutSection profile={profile} />
     </main>
   );
 }

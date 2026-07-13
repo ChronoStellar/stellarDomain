@@ -9,6 +9,25 @@ export async function generateStaticParams() {
   }));
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  try {
+    const project = await getProjectBySlug(slug);
+    return {
+      title: `${project.title} | Projects`,
+      description: project.summary,
+    };
+  } catch (e) {
+    return {
+      title: "Project Not Found",
+    };
+  }
+}
+
 export default async function ProjectPage({
   params,
 }: {

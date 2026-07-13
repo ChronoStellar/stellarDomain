@@ -8,7 +8,17 @@
   "github": "https://github.com/ChronoStellar",
   "linkedin": "https://linkedin.com/in/hendrik-nicolas-carlo",
   "stats": [
-    { "value": "3.95", "label": "GPA / 4.00", "subtext": "" },
+    { "value": "", "label": "GPA / 4.00", "subtext": "" },
     { "value": "5", "label": "iOS apps shipped", "subtext": "in 10 mo" }
+  ],
+  "about": [
+    "I am a passionate software engineer with a strong focus on applied AI, computer vision, and machine learning deployment.",
+    "During my time at the Apple Developer Academy, I learned how to bridge the gap between research-grade models and production-ready applications, delivering real-world value through intuitive interfaces and robust infrastructure.",
+    "I'm always eager to learn new technologies, tackle complex problems, and build experiences that make a difference."
+  ],
+  "competencies": [
+    { "name": "Python", "description": "Extensive experience in building robust backend services, data pipelines, and deploying deep learning models using PyTorch and FastAPI." },
+    { "name": "Swift", "description": "Proficient in SwiftUI and UIKit. Built and shipped 5 production iOS applications with seamless Core ML integrations." },
+    { "name": "TypeScript", "description": "Strong command of modern web development using Next.js, React, and building performant, type-safe full-stack applications." }
   ]
 }
