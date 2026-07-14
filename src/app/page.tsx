@@ -15,9 +15,9 @@ export default function Home() {
       
       {/* Navigation */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(10px)', background: 'color-mix(in oklch, var(--bg) 82%, transparent)', borderBottom: '1px solid var(--border)' }}>
-        <div className="container" style={{ padding: '18px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="container nav-padding" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <a href="/" className="heading-display" style={{ fontSize: '18px' }}>{profile.name}</a>
-          <div style={{ display: 'flex', gap: '32px', fontSize: '13px' }} className="text-mono">
+          <div style={{ display: 'flex', fontSize: '13px' }} className="text-mono nav-links">
             <a href="#work" className="nav-link" style={{ color: 'var(--text-muted)' }}>Work</a>
             <a href="#publications" className="nav-link" style={{ color: 'var(--text-muted)' }}>Publications</a>
             <a href="#about" className="nav-link" style={{ color: 'var(--text-muted)' }}>About</a>
@@ -26,8 +26,8 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section style={{ position: 'relative', overflow: 'hidden', padding: '96px 0 80px', zIndex: 1 }} className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '60px', alignItems: 'start' }} className="hero-grid">
+      <section style={{ position: 'relative', overflow: 'hidden', zIndex: 1 }} className="container hero-padding">
+        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', alignItems: 'start' }} className="hero-grid">
           <div>
             <div className="text-mono" style={{ fontSize: '13px', fontWeight: 600, color: 'var(--accent)', letterSpacing: '0.06em', marginBottom: '20px' }}>
               ✦ AVAILABLE FOR OPPORTUNITIES
@@ -59,7 +59,7 @@ export default function Home() {
 
       {/* Publications Section */}
       {publications.length > 0 && (
-        <section id="publications" className="container" style={{ padding: '0 28px 90px', position: 'relative', zIndex: 1 }}>
+        <section id="publications" className="container section-padding" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '36px', borderBottom: '1px solid var(--border)', paddingBottom: '18px' }}>
             <h2 className="heading-display" style={{ fontSize: '14px', letterSpacing: '0.08em', color: 'var(--text-faint)', textTransform: 'uppercase', margin: 0 }}>Publications</h2>
           </div>

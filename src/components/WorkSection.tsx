@@ -24,15 +24,15 @@ export default function WorkSection({ projects }: { projects: ProjectMetadata[] 
   }, [projects, selectedTag]);
 
   return (
-    <section id="work" className="container" style={{ padding: '40px 28px 90px', position: 'relative', zIndex: 1 }}>
+    <section id="work" className="container section-padding" style={{ position: 'relative', zIndex: 1 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '24px', borderBottom: '1px solid var(--border)', paddingBottom: '18px', flexWrap: 'wrap', gap: '16px' }}>
         <h2 className="heading-display" style={{ fontSize: '14px', letterSpacing: '0.08em', color: 'var(--text-faint)', textTransform: 'uppercase', margin: 0 }}>Selected Work</h2>
         
         {/* Skills / Language Picker */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <div className="picker-container" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button
             onClick={() => setSelectedTag(null)}
-            className="text-mono"
+            className="text-mono picker-btn"
             style={{
               background: selectedTag === null ? 'var(--text)' : 'transparent',
               color: selectedTag === null ? 'var(--bg)' : 'var(--text-muted)',
@@ -51,7 +51,7 @@ export default function WorkSection({ projects }: { projects: ProjectMetadata[] 
             <button
               key={tag}
               onClick={() => setSelectedTag(tag)}
-              className="text-mono"
+              className="text-mono picker-btn"
               style={{
                 background: selectedTag === tag ? 'var(--accent)' : 'var(--card)',
                 color: selectedTag === tag ? '#fff' : 'var(--text-muted)',
