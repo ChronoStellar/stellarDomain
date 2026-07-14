@@ -7,7 +7,7 @@ export default function AboutSection({ profile }: { profile: ProfileData }) {
   const [activeCompetency, setActiveCompetency] = useState<number>(0);
 
   return (
-    <section id="about" className="container" style={{ padding: '0 28px 120px', position: 'relative', zIndex: 1 }}>
+    <section id="about" className="container section-padding" style={{ position: 'relative', zIndex: 1 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '36px', borderBottom: '1px solid var(--border)', paddingBottom: '18px' }}>
         <h2 className="heading-display" style={{ fontSize: '14px', letterSpacing: '0.08em', color: 'var(--text-faint)', textTransform: 'uppercase', margin: 0 }}>About Me</h2>
       </div>
@@ -26,12 +26,12 @@ export default function AboutSection({ profile }: { profile: ProfileData }) {
         {profile.competencies && profile.competencies.length > 0 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Picker Header / Buttons */}
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '8px' }}>
+            <div className="picker-container" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '8px' }}>
               {profile.competencies.map((comp, idx) => (
                 <button
                   key={comp.name}
                   onClick={() => setActiveCompetency(idx)}
-                  className="text-mono"
+                  className="text-mono picker-btn"
                   style={{
                     background: activeCompetency === idx ? 'var(--accent)' : 'var(--card)',
                     color: activeCompetency === idx ? '#fff' : 'var(--text-muted)',

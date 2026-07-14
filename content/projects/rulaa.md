@@ -1,18 +1,21 @@
 ---
-title: "Rulaa"
-date: "2024-01-01"
-tags: ["SwiftUI", "Vision", "Docker", "ML Infra"]
-summary: "Clothing size recommendation & body measurement app. Led the end-to-end AI/ML lifecycle — benchmarking, server architecture, and Docker-based serverless inference — with a secure SwiftUI/Vision client on MVVM."
+title: "Rulaa: Real-Time Object Detection"
+date: "2024-03-15"
+tags: ["Python", "Core ML", "Computer Vision"]
+summary: "An edge-deployed machine learning application that provides real-time object detection and spatial tracking on iOS devices."
+coverImage: "/images/projects/rulaa.jpg"
 ---
 
-# Rulaa Case Study
+# Real-Time Spatial Analysis
 
-Rulaa is a clothing size recommendation application designed to leverage body measurements via computer vision.
+Rulaa bridges the gap between complex machine learning models and intuitive user interfaces. By optimizing PyTorch models and converting them to Core ML, we achieved 60fps inference on mobile devices with minimal battery drain.
 
-## Architecture
-- **Client**: SwiftUI + Vision framework
-- **Backend**: Docker-based serverless inference
-- **Design Pattern**: MVVM
+## Key Technical Challenges
 
-## Features
-We implemented a robust system that accurately captures body metrics...
+- **Model Quantization:** Reduced the model size by 75% without significant accuracy loss.
+- **Hardware Acceleration:** Utilized the Apple Neural Engine to offload computations from the main CPU.
+- **Data Pipeline:** Built a custom data ingestion and training pipeline using FastAPI and PostgreSQL to continually improve model accuracy based on edge-case feedback.
+
+## The Result
+
+The final application delivers seamless, augmented reality object detection, allowing users to interact with their environment in entirely new ways.

@@ -44,22 +44,28 @@ export default async function ProjectPage({
   return (
     <main style={{ position: 'relative', zIndex: 1 }} className="container">
       <nav style={{ padding: '32px 0', borderBottom: '1px solid var(--border)', marginBottom: '40px' }}>
-        <Link href="/" className="text-mono" style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
-          ← Back to Home
+        <Link href="/" className="text-mono link-hover" style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
+          ← Back to home
         </Link>
       </nav>
 
       <article style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '100px' }}>
         <header style={{ marginBottom: '40px' }}>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
-            {project.tags.map((tag) => (
-              <span key={tag} className="text-mono" style={{ fontSize: '11px', color: 'var(--accent-dim)', background: 'var(--accent-soft)', padding: '4px 10px', borderRadius: '100px' }}>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
+            {project.tags.map(tag => (
+              <span key={tag} className="text-mono" style={{ fontSize: '12px', color: 'var(--accent)', background: 'var(--accent-soft)', padding: '6px 12px', borderRadius: '100px' }}>
                 {tag}
               </span>
             ))}
           </div>
-          <h1 className="heading-display" style={{ fontSize: '48px', margin: '0 0 16px' }}>{project.title}</h1>
-          <p style={{ fontSize: '18px', color: 'var(--text-muted)', lineHeight: 1.6 }}>{project.summary}</p>
+          <h1 className="heading-display h1-title" style={{ fontSize: '48px', margin: '0 0 24px', lineHeight: 1.1 }}>{project.title}</h1>
+          <p style={{ fontSize: '20px', color: 'var(--text-faint)', margin: '0 0 40px', lineHeight: 1.5 }}>{project.summary}</p>
+          
+          {project.coverImage && (
+            <div style={{ width: '100%', aspectRatio: '16/9', overflow: 'hidden', borderRadius: '16px', border: '1px solid var(--border)' }}>
+              <img src={project.coverImage} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+          )}
         </header>
 
         <div 

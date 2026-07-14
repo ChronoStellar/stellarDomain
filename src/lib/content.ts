@@ -12,6 +12,8 @@ export interface ProjectMetadata {
   tags: string[];
   summary: string;
   slug: string;
+  coverImage?: string;
+  pinned?: boolean;
 }
 
 export interface PublicationMetadata {
@@ -32,7 +34,7 @@ export interface ProfileData {
   email: string;
   github: string;
   linkedin: string;
-  stats: { label: string; value: string; subtext: string }[];
+  stats: { label: string; value: string; subtext: string; url?: string }[];
 }
 
 export function getProfileData(): ProfileData {
@@ -76,10 +78,19 @@ export function getAllProjects(): ProjectMetadata[] {
       };
     });
 
-  // Sort projects by date
+  // Sort projects by pinned status, then by date
   return allProjectsData.sort((a, b) => {
+    const aPinned = a.pinned || false;
+    const bPinned = b.pinned || false;
+    
+    if (aPinned !== bPinned) {
+      return aPinned ? -1 : 1;
+    }
+    
+    // Fall back to date sorting
     if (a.date < b.date) return 1;
-    return -1;
+    if (a.date > b.date) return -1;
+    return 0;
   });
 }
 
@@ -146,3 +157,4 @@ export async function getPublicationBySlug(slug: string) {
     ...(matterResult.data as Omit<PublicationMetadata, 'slug'>),
   };
 }
+

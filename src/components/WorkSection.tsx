@@ -7,7 +7,7 @@ import Link from 'next/link';
 // Assuming you export it from @/lib/content
 import type { ProjectMetadata } from '@/lib/content';
 
-export default function WorkSection({ projects }: { projects: ProjectMetadata[] }) {
+export default function WorkSection({ projects, limit }: { projects: ProjectMetadata[], limit?: number }) {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   // Extract all unique tags from all projects
@@ -23,16 +23,18 @@ export default function WorkSection({ projects }: { projects: ProjectMetadata[] 
     return projects.filter(p => p.tags.includes(selectedTag));
   }, [projects, selectedTag]);
 
+  const displayProjects = limit ? filteredProjects.slice(0, limit) : filteredProjects;
+
   return (
-    <section id="work" className="container" style={{ padding: '40px 28px 90px', position: 'relative', zIndex: 1 }}>
+    <section id="work" className="container section-padding" style={{ position: 'relative', zIndex: 1 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '24px', borderBottom: '1px solid var(--border)', paddingBottom: '18px', flexWrap: 'wrap', gap: '16px' }}>
         <h2 className="heading-display" style={{ fontSize: '14px', letterSpacing: '0.08em', color: 'var(--text-faint)', textTransform: 'uppercase', margin: 0 }}>Selected Work</h2>
         
         {/* Skills / Language Picker */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <div className="picker-container" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button
             onClick={() => setSelectedTag(null)}
-            className="text-mono"
+            className="text-mono picker-btn"
             style={{
               background: selectedTag === null ? 'var(--text)' : 'transparent',
               color: selectedTag === null ? 'var(--bg)' : 'var(--text-muted)',
@@ -51,7 +53,7 @@ export default function WorkSection({ projects }: { projects: ProjectMetadata[] 
             <button
               key={tag}
               onClick={() => setSelectedTag(tag)}
-              className="text-mono"
+              className="text-mono picker-btn"
               style={{
                 background: selectedTag === tag ? 'var(--accent)' : 'var(--card)',
                 color: selectedTag === tag ? '#fff' : 'var(--text-muted)',
@@ -71,9 +73,15 @@ export default function WorkSection({ projects }: { projects: ProjectMetadata[] 
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '28px' }} className="work-grid">
-        {filteredProjects.map((project) => (
+        {displayProjects.map((project) => (
           <Link href={`/projects/${project.slug}`} key={project.slug} className="card-hover" style={{ display: 'flex', flexDirection: 'column', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden', background: 'var(--card)', color: 'inherit' }}>
-            <div style={{ aspectRatio: '16/10', backgroundImage: 'repeating-linear-gradient(135deg, var(--bg-alt) 0px, var(--bg-alt) 14px, var(--card) 14px, var(--card) 28px)', borderBottom: '1px solid var(--border)' }} />
+            {project.coverImage ? (
+              <div style={{ aspectRatio: '16/10', width: '100%', overflow: 'hidden', borderBottom: '1px solid var(--border)' }}>
+                <img src={project.coverImage} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+            ) : (
+              <div style={{ aspectRatio: '16/10', backgroundImage: 'repeating-linear-gradient(135deg, var(--bg-alt) 0px, var(--bg-alt) 14px, var(--card) 14px, var(--card) 28px)', borderBottom: '1px solid var(--border)' }} />
+            )}
             <div style={{ padding: '26px 26px 28px' }}>
               <div style={{ display: 'flex', gap: '8px', marginBottom: '14px', flexWrap: 'wrap' }}>
                 {project.tags.map((tag) => (
@@ -88,12 +96,20 @@ export default function WorkSection({ projects }: { projects: ProjectMetadata[] 
             </div>
           </Link>
         ))}
-        {filteredProjects.length === 0 && (
+        {displayProjects.length === 0 && (
           <div style={{ gridColumn: '1 / -1', padding: '60px 0', textAlign: 'center', color: 'var(--text-muted)' }} className="text-mono">
             No projects found for the selected skill.
           </div>
         )}
       </div>
+      
+      {limit && filteredProjects.length > limit && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '48px' }}>
+          <Link href="/projects" className="text-mono link-hover" style={{ fontSize: '13px', padding: '14px 28px', border: '1px solid var(--border)', borderRadius: '100px', background: 'var(--card)', color: 'var(--text)' }}>
+            View all {filteredProjects.length} projects →
+          </Link>
+        </div>
+      )}
     </section>
   );
 }

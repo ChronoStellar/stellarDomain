@@ -8,9 +8,9 @@ export default function Footer() {
     <footer id="contact" style={{ background: 'var(--text)', color: 'var(--bg)', position: 'relative', overflow: 'hidden', marginTop: 'auto' }}>
       <ThreeBackground isFixed={false} color={0xffffff} />
       
-      <div className="container" style={{ padding: '90px 28px 60px', position: 'relative', zIndex: 1 }}>
+      <div className="container footer-padding" style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '40px', marginBottom: '60px', flexWrap: 'wrap' }}>
-          <h2 className="heading-display" style={{ fontSize: '44px', color: 'White', margin: 0, maxWidth: '520px', lineHeight: 1.1 }}>
+          <h2 className="heading-display footer-heading" style={{ color: 'White' }}>
             Let's build something worth shipping.
           </h2>
           <a 

@@ -8,8 +8,8 @@
   "github": "https://github.com/ChronoStellar",
   "linkedin": "https://linkedin.com/in/hendrik-nicolas-carlo",
   "stats": [
-    { "value": "", "label": "GPA / 4.00", "subtext": "" },
-    { "value": "5", "label": "iOS apps shipped", "subtext": "in 10 mo" }
+    { "value": "GitHub", "label": "@ChronoStellar", "subtext": "", "url": "https://github.com/ChronoStellar" },
+    { "value": "LinkedIn", "label": "Connect with me", "subtext": "", "url": "https://linkedin.com/in/hendrik-nicolas-carlo" }
   ],
   "about": [
     "I am a passionate software engineer with a strong focus on applied AI, computer vision, and machine learning deployment.",
