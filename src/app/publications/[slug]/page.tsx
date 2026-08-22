@@ -1,6 +1,7 @@
 import { getPublicationBySlug, getAllPublications } from '@/lib/content';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import SiteNav from '@/components/SiteNav';
 
 export async function generateStaticParams() {
   const publications = getAllPublications();
@@ -20,8 +21,18 @@ export async function generateMetadata({
     return {
       title: `${pub.title} | Publications`,
       description: pub.summary,
+      openGraph: {
+        title: pub.title,
+        description: pub.summary,
+        type: "article",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: pub.title,
+        description: pub.summary,
+      },
     };
-  } catch (e) {
+  } catch {
     return {
       title: "Publication Not Found",
     };
@@ -37,44 +48,56 @@ export default async function PublicationPage({
   let pub;
   try {
     pub = await getPublicationBySlug(slug);
-  } catch (e) {
+  } catch {
     notFound();
   }
 
+  const all = getAllPublications();
+  const index = all.findIndex((p) => p.slug === slug);
+  const next = index >= 0 && all.length > 1 ? all[(index + 1) % all.length] : null;
+
   return (
-    <main style={{ position: 'relative', zIndex: 1 }} className="container">
-      <nav style={{ padding: '32px 0', borderBottom: '1px solid var(--border)', marginBottom: '40px' }}>
-        <Link href="/#publications" className="text-mono link-hover" style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
-          ← Back to home
-        </Link>
-      </nav>
+    <>
+      <SiteNav backHref="/#publications" backLabel="All publications" />
 
-      <article style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '100px' }}>
-        <header style={{ marginBottom: '40px' }}>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
-            <span className="text-mono" style={{ fontSize: '12px', color: 'var(--accent)', background: 'var(--accent-soft)', padding: '6px 12px', borderRadius: '100px' }}>
-              {pub.date}
-            </span>
-            <span className="text-mono" style={{ fontSize: '12px', color: 'var(--text-muted)', border: '1px solid var(--border)', padding: '6px 12px', borderRadius: '100px' }}>
-              {pub.venue}
-            </span>
-          </div>
-          <h1 className="heading-display h1-title" style={{ fontSize: '48px', margin: '0 0 24px', lineHeight: 1.1 }}>{pub.title}</h1>
-          <p style={{ fontSize: '20px', color: 'var(--text-faint)', margin: '0 0 24px', lineHeight: 1.5 }}>{pub.summary}</p>
-          
-          {pub.url && (
-            <a href={pub.url} target="_blank" rel="noopener noreferrer" className="text-mono link-hover" style={{ fontSize: '14px', display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--accent)', textDecoration: 'none' }}>
-              Read Original Publication ↗
-            </a>
+      <main id="main" className="container article-shell">
+        <article className="article">
+          <header className="article-header">
+            <div className="article-tags">
+              <span className="text-mono tag-pill">{pub.date}</span>
+              <span className="text-mono tag-pill tag-pill-quiet">{pub.venue}</span>
+            </div>
+            <h1 className="heading-display article-title">{pub.title}</h1>
+            <p className="article-summary">{pub.summary}</p>
+
+            {pub.url && (
+              <a
+                href={pub.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-mono link-hover article-source"
+              >
+                Read original publication ↗
+              </a>
+            )}
+          </header>
+
+          <div
+            className="markdown-content"
+            dangerouslySetInnerHTML={{ __html: pub.contentHtml }}
+          />
+        </article>
+
+        <nav className="article-footer text-mono" aria-label="Publication navigation">
+          <Link href="/#publications">← All publications</Link>
+          {next && (
+            <Link href={`/publications/${next.slug}`} className="article-next">
+              <span>Next publication</span>
+              {next.title} →
+            </Link>
           )}
-        </header>
-
-        <div 
-          className="markdown-content" 
-          dangerouslySetInnerHTML={{ __html: pub.contentHtml }} 
-          style={{ lineHeight: 1.8, fontSize: '16px', color: 'var(--text)' }}
-        />
-      </article>
-    </main>
+        </nav>
+      </main>
+    </>
   );
 }
