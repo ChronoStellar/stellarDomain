@@ -1,7 +1,7 @@
 import { getProjectBySlug, getAllProjects } from '@/lib/content';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import ThemeToggle from '@/components/ThemeToggle';
+import SiteNav from '@/components/SiteNav';
 
 export async function generateStaticParams() {
   const projects = getAllProjects();
@@ -34,7 +34,7 @@ export async function generateMetadata({
         images: project.coverImage ? [project.coverImage] : [],
       },
     };
-  } catch (e) {
+  } catch {
     return {
       title: "Project Not Found",
     };
@@ -50,44 +50,54 @@ export default async function ProjectPage({
   let project;
   try {
     project = await getProjectBySlug(slug);
-  } catch (e) {
+  } catch {
     notFound();
   }
 
+  // Next project in the same order the listing uses, so the reader always has
+  // somewhere to go after the case study.
+  const all = getAllProjects();
+  const index = all.findIndex((p) => p.slug === slug);
+  const next = index >= 0 && all.length > 1 ? all[(index + 1) % all.length] : null;
+
   return (
-    <main style={{ position: 'relative', zIndex: 1 }} className="container">
-      <nav style={{ padding: '32px 0', borderBottom: '1px solid var(--border)', marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Link href="/" className="text-mono link-hover" style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
-          ← Back to home
-        </Link>
-        <ThemeToggle />
-      </nav>
+    <>
+      <SiteNav backHref="/#work" backLabel="All work" />
 
-      <article style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '100px' }}>
-        <header style={{ marginBottom: '40px' }}>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
-            {project.tags.map(tag => (
-              <span key={tag} className="text-mono" style={{ fontSize: '12px', color: 'var(--accent)', background: 'var(--accent-soft)', padding: '6px 12px', borderRadius: '100px' }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-          <h1 className="heading-display h1-title" style={{ fontSize: '48px', margin: '0 0 24px', lineHeight: 1.1 }}>{project.title}</h1>
-          <p style={{ fontSize: '20px', color: 'var(--text-faint)', margin: '0 0 40px', lineHeight: 1.5 }}>{project.summary}</p>
-          
-          {project.coverImage && (
-            <div style={{ width: '100%', aspectRatio: '16/9', overflow: 'hidden', borderRadius: '16px', border: '1px solid var(--border)' }}>
-              <img src={project.coverImage} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      <main id="main" className="container article-shell">
+        <article className="article">
+          <header className="article-header">
+            <div className="article-tags">
+              {project.tags.map((tag) => (
+                <span key={tag} className="text-mono tag-pill">{tag}</span>
+              ))}
             </div>
-          )}
-        </header>
+            <h1 className="heading-display article-title">{project.title}</h1>
+            <p className="article-summary">{project.summary}</p>
 
-        <div 
-          className="markdown-content" 
-          dangerouslySetInnerHTML={{ __html: project.contentHtml }} 
-          style={{ lineHeight: 1.8, fontSize: '16px', color: 'var(--text)' }}
-        />
-      </article>
-    </main>
+            {project.coverImage && (
+              <div className="article-cover">
+                <img src={project.coverImage} alt="" decoding="async" />
+              </div>
+            )}
+          </header>
+
+          <div
+            className="markdown-content"
+            dangerouslySetInnerHTML={{ __html: project.contentHtml }}
+          />
+        </article>
+
+        <nav className="article-footer text-mono" aria-label="Project navigation">
+          <Link href="/projects">← All projects</Link>
+          {next && (
+            <Link href={`/projects/${next.slug}`} className="article-next">
+              <span>Next project</span>
+              {next.title} →
+            </Link>
+          )}
+        </nav>
+      </main>
+    </>
   );
 }

@@ -34,7 +34,12 @@ export interface ProfileData {
   email: string;
   github: string;
   linkedin: string;
-  stats: { label: string; value: string; subtext: string; url?: string }[];
+  focus?: {
+    label: string;
+    body: string;
+    linkText?: string;
+    linkHref?: string;
+  };
 }
 
 export function getProfileData(): ProfileData {
@@ -49,7 +54,6 @@ export function getProfileData(): ProfileData {
       email: '',
       github: '',
       linkedin: '',
-      stats: [],
     };
   }
   const fileContents = fs.readFileSync(filePath, 'utf8');

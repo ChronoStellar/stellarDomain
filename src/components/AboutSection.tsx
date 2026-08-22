@@ -1,62 +1,79 @@
 "use client";
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { ProfileData } from '@/lib/content';
 
 export default function AboutSection({ profile }: { profile: ProfileData }) {
-  const [activeCompetency, setActiveCompetency] = useState<number>(0);
+  const [active, setActive] = useState(0);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const competencies = profile.competencies ?? [];
+
+  // Roving focus: arrow keys move between tabs, Home/End jump to the ends.
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const last = competencies.length - 1;
+    let next: number | null = null;
+
+    if (e.key === 'ArrowRight') next = active === last ? 0 : active + 1;
+    else if (e.key === 'ArrowLeft') next = active === 0 ? last : active - 1;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = last;
+
+    if (next !== null) {
+      e.preventDefault();
+      setActive(next);
+      tabRefs.current[next]?.focus();
+    }
+  };
 
   return (
     <section id="about" className="container section-padding" style={{ position: 'relative', zIndex: 1 }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '36px', borderBottom: '1px solid var(--border)', paddingBottom: '18px' }}>
-        <h2 className="heading-display" style={{ fontSize: '14px', letterSpacing: '0.08em', color: 'var(--text-faint)', textTransform: 'uppercase', margin: 0 }}>About Me</h2>
+      <div className="section-head">
+        <h2 className="section-title">About</h2>
       </div>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '80px', alignItems: 'start' }} className="hero-grid">
-        {/* Left: Bio Text */}
+
+      <div className="hero-grid about-grid">
         <div>
           {profile.about.map((paragraph, idx) => (
-            <p key={idx} style={{ fontSize: '18px', lineHeight: 1.6, color: 'var(--text-muted)', marginBottom: '24px' }}>
-              {paragraph}
-            </p>
+            <p key={idx} className="about-para">{paragraph}</p>
           ))}
         </div>
-        
-        {/* Right: Competencies Picker */}
-        {profile.competencies && profile.competencies.length > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {/* Picker Header / Buttons */}
-            <div className="picker-container" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '8px' }}>
-              {profile.competencies.map((comp, idx) => (
+
+        {competencies.length > 0 && (
+          <div className="competency">
+            <div
+              className="picker-container"
+              role="tablist"
+              aria-label="Core competencies"
+              onKeyDown={onKeyDown}
+            >
+              {competencies.map((comp, idx) => (
                 <button
                   key={comp.name}
-                  onClick={() => setActiveCompetency(idx)}
+                  type="button"
+                  role="tab"
+                  id={`competency-tab-${idx}`}
+                  aria-selected={active === idx}
+                  aria-controls={`competency-panel-${idx}`}
+                  tabIndex={active === idx ? 0 : -1}
+                  ref={(el) => { tabRefs.current[idx] = el; }}
+                  onClick={() => setActive(idx)}
                   className="text-mono picker-btn"
-                  style={{
-                    background: activeCompetency === idx ? 'var(--accent)' : 'var(--card)',
-                    color: activeCompetency === idx ? '#fff' : 'var(--text-muted)',
-                    border: '1px solid',
-                    borderColor: activeCompetency === idx ? 'var(--accent)' : 'var(--border)',
-                    padding: '8px 16px',
-                    borderRadius: '100px',
-                    fontSize: '12.5px',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                  }}
+                  data-active={active === idx}
                 >
                   {comp.name}
                 </button>
               ))}
             </div>
-            
-            {/* Display active competency description */}
-            <div style={{ padding: '24px', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px' }}>
-              <h3 className="heading-display" style={{ fontSize: '20px', margin: '0 0 12px', color: 'var(--text)' }}>
-                {profile.competencies[activeCompetency].name}
-              </h3>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--text-muted)', margin: 0 }}>
-                {profile.competencies[activeCompetency].description}
-              </p>
+
+            <div
+              role="tabpanel"
+              id={`competency-panel-${active}`}
+              aria-labelledby={`competency-tab-${active}`}
+              tabIndex={0}
+              className="competency-panel"
+            >
+              <h3 className="heading-display competency-title">{competencies[active].name}</h3>
+              <p className="competency-desc">{competencies[active].description}</p>
             </div>
           </div>
         )}
