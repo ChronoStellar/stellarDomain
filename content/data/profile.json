@@ -1,6 +1,6 @@
 {
   "name": "Hendrik Nicolas Carlo",
-  "tagline": "I build and benchmark vision-language systems for messy, real-world roads.",
+  "tagline": "I turn research-grade models into software people can actually use.",
   "bio": [
     "Computer Science undergraduate and Apple Developer Academy graduate specializing in applied AI, computer vision, and ML deployment — bridging research-grade models with production iOS apps and cloud infrastructure."
   ],
@@ -28,7 +28,7 @@
   ],
   "focus": {
     "label": "Current focus",
-    "body": "Most autonomous-driving benchmarks assume orderly, Western roads. JKTDrive tests vision-language models against Jakarta traffic — weaving motorcycles, informal right-of-way, roadside vendors, and ambiguous markings.",
+    "body": "Right now that means JKTDrive — a benchmark for vision-language models on Jakarta traffic, where weaving motorcycles, informal right-of-way and ambiguous markings break the assumptions most driving datasets are built on.",
     "linkText": "Read the benchmark",
     "linkHref": "/projects/jktdrive"
   }

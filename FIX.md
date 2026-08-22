@@ -4,9 +4,10 @@ A UI/UX + recruiter-perspective review of the site, and the record of what was d
 it. Branch `ui-add`, 2026-08-22.
 
 **Status:** Phases 1–3 (design, bugs, accessibility) are complete and verified in a
-browser. **Phase 0 (content credibility) is untouched and is the highest-impact work
-remaining** — it is deliberately left to the author, since which projects are real is not
-a call this review can make.
+browser. **Phase 0 (content credibility) is in progress and is the highest-impact work
+remaining** — `aura.md` and `nexus.md` have been deleted; `rulaa.md` and both publications
+are still placeholder. Content decisions are left to the author, since which projects are
+real is not a call this review can make.
 
 ---
 
@@ -22,8 +23,8 @@ VLM driving benchmark with a real dataset (273 human-annotated scenes) and a rea
 evaluation across five models. It currently sits in a grid beside three fabrications. The
 fake work actively devalues the real work.
 
-- [ ] Delete `content/projects/aura.md` (invented "40% faster", fake cover image path).
-- [ ] Delete `content/projects/nexus.md` (invented infrastructure, fake cover image path).
+- [x] Delete `content/projects/aura.md` (invented "40% faster", fake cover image path).
+- [x] Delete `content/projects/nexus.md` (invented infrastructure, fake cover image path).
 - [ ] Delete `content/projects/rulaa.md` (invented "75% size reduction", fake cover image).
 - [ ] Delete `content/publications/edge-ml.md` (`url: https://example.com/...`).
 - [ ] Delete `content/publications/reusable-ui.md` (`url: https://example.com/...`).
@@ -34,7 +35,8 @@ fake work actively devalues the real work.
       N production apps" needs to be true and, ideally, linkable.
 
 Shipping with one real project is strictly better than shipping with four where three are
-hollow.
+hollow. As of this writing two of the four fabricated projects are gone; `rulaa.md`
+(invented "75% size reduction", "60fps") and both `example.com` publications remain.
 
 ### Rewrite JKTDrive as a case study
 
@@ -55,11 +57,13 @@ register for the audience.
 
 ### Also needs your words
 
-- [ ] `focus.body` in `profile.json` is a first draft paraphrased from the JKTDrive README.
-      It is now the most prominent sentence on the page after the tagline, so it should be
-      in your voice, not mine.
-- [ ] The tagline — currently "I build and benchmark vision-language systems for messy,
-      real-world roads." — likewise.
+- [ ] `focus.body` in `profile.json` is my draft. It is the most prominent sentence on the
+      page after the tagline, so it should be in your voice.
+- [ ] The tagline is now "I turn research-grade models into software people can actually
+      use." — broadened deliberately: the previous line named only the VLM work and
+      undersold the iOS and full-stack range. Note that "creating solutions" and similar
+      were avoided on purpose; they are the most common phrasing on engineering portfolios
+      and give a reader nothing to picture. Revise the wording, but keep it concrete.
 
 ---
 
@@ -85,12 +89,27 @@ body text beneath it. A widely-copied house style, which is exactly why it read 
 
 - [x] Section headings are now 28px in full-strength `--text` with an accent rule.
 
-### 1.3 Section rhythm was inverted
+### 1.3 Section rhythm was inverted, then silently zeroed
 
 `.section-padding` was `25px` on desktop and `80px` on mobile — the widest screens got the
 least breathing room, so sections blurred into one scroll.
 
-- [x] Corrected: `--section-gap` is 120px on desktop, stepping down to 64px on mobile.
+- [x] Corrected: `--section-gap` is 120px desktop / 88px tablet / 72px mobile.
+- [x] **Follow-up bug, found by measuring.** The first fix looked right but computed to
+      `padding-top: 0` on every section below 860px. Cause: section wrappers carry both
+      `.container` and `.section-padding`, and `.container`'s `padding` **shorthand** also
+      resets top/bottom. On desktop `.section-padding` won on source order; inside the
+      media query `.container` came later and clobbered it. The tablet band lost hero
+      padding the same way.
+
+      Fixed by splitting the axes so the two classes can never overwrite each other:
+      `.container` uses `padding-inline`, and every vertical rule (`.section-padding`,
+      `.hero-padding`, `.footer-padding`, `.nav-padding`, `.article`) uses `padding-block`.
+      Nav and footer no longer bake in their own horizontal padding, since `.container`
+      supplies it.
+- [x] Added a genuine tablet step. Horizontal padding is now 28px desktop / 44px tablet /
+      24px mobile, and card, focus, publication and competency panels get tighter interior
+      padding under 640px.
 
 ### 1.4 Type had almost no range
 
@@ -253,7 +272,12 @@ above Rigel and the sword below the belt; Cygnus with Deneb at the tail, Albireo
 and wings on opposite sides of Sadr; Cassiopeia's W zigzag confirmed. Orion's belt is
 collinear to 0.006°; Dipper and Crux separations match published values.
 
-**Browser (Chromium via Playwright, software WebGL):** 1440×900 and 390×844, both themes.
+**Responsive padding:** measured computed styles at 1440 / 1024 / 900 / 860 / 768 / 700 /
+640 / 480 / 390 / 360px. Horizontal 28/44/24px and vertical 120/88/72px resolve correctly
+at every step, with no zero values and no horizontal overflow.
+
+**Browser (Chromium via Playwright, software WebGL):** 1440×900, 768×1024 and 390×844,
+both themes.
 Canvas sizes correctly to the viewport, WebGL initialises, no console errors.
 Constellations legible in the margins in dark *and* light mode, headline unobscured. Mobile
 hamburger and stacked hero correct. Featured-card hierarchy working.
@@ -298,5 +322,6 @@ Playwright and pngjs were installed with `--no-save`; `package.json` is unchange
 
 1. **Phase 0 in full** — it changes whether a reader believes anything else on the page.
 2. The JKTDrive case-study rewrite.
-3. Put the `focus` card text and tagline in your own words.
+3. Put the `focus` card text in your own words (the tagline has been broadened; refine to
+   taste).
 4. Pre-resize the JKTDrive cover image (currently 4096×2048, served at full weight).
