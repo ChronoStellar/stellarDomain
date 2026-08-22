@@ -130,6 +130,25 @@ export const CONSTELLATIONS: Constellation[] = [
     ],
   },
   {
+    // Completes the Summer Triangle with Vega (Lyra) and Deneb (Cygnus).
+    // Altair is flanked by Tarazed and Alshain — the close three-in-a-row that
+    // makes Aquila identifiable at a glance.
+    name: 'Aquila',
+    stars: [
+      { ra: 19.8464, dec: 8.8683, mag: 0.76, name: 'Altair' },
+      { ra: 19.7710, dec: 10.6133, mag: 2.72, name: 'Tarazed' },
+      { ra: 19.9219, dec: 6.4068, mag: 3.71, name: 'Alshain' },
+      { ra: 19.4255, dec: 3.1148, mag: 3.36, name: 'Delta Aql' },
+      { ra: 19.0921, dec: 13.8635, mag: 2.99, name: 'Zeta Aql' },
+      { ra: 20.1883, dec: -0.8215, mag: 3.44, name: 'Theta Aql' },
+      { ra: 19.1041, dec: -4.8823, mag: 3.24, name: 'Lambda Aql' },
+      { ra: 18.9935, dec: 15.0680, mag: 4.02, name: 'Epsilon Aql' },
+    ],
+    lines: [
+      [1, 0], [0, 2], [4, 1], [7, 4], [1, 3], [3, 6], [2, 5], [3, 5],
+    ],
+  },
+  {
     name: 'Crux',
     stars: [
       { ra: 12.4433, dec: -63.0991, mag: 0.77, name: 'Acrux' },

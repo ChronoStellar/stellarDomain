@@ -192,8 +192,10 @@ in dark. ~200KB of three.js, a WebGL context and a permanent rAF loop, mounted *
 
 ## Constellations
 
-The background renders seven real constellations over a scattered star field: Orion, Ursa
-Major, Cassiopeia, Cygnus, Lyra, Scorpius, Crux. This also makes good on the README's
+The background renders eight real constellations over a scattered star field: Orion, Ursa
+Major, Cassiopeia, Cygnus, Lyra, Scorpius, Aquila, Crux. Lyra, Cygnus and Aquila carry
+Vega, Deneb and Altair respectively — the three stars of the Summer Triangle, and the
+brightest points in the whole field. This also makes good on the README's
 existing "interconnected star constellations" claim, which the previous random point cloud
 did not.
 
@@ -227,6 +229,10 @@ constellation never visibly repeats a loop — with a shallow roll and pitch lay
 Amplitude scales with parallax depth, so nearer figures travel further. Scroll parallax
 applies on top.
 
+Amplitude is tuned in *screen* terms, not world units: the figures sit at z ≈ -400..-600,
+so perspective shrinks world-space movement substantially. See **Verification** for the
+measured travel — the first pass was mathematically moving but visually static.
+
 Motion is driven by **accumulated animating time**, not `THREE.Clock`: Clock keeps counting
 while the loop is paused offscreen or in a hidden tab, so figures would teleport on resume.
 The per-frame delta is clamped to 50ms so a stalled frame cannot jump the drift either. The
@@ -238,6 +244,13 @@ plane that makes them recognisable.
 - Scorpius had too few stars; the tail straightened into a diagonal and lost its hook. Now
   carries the full 15-star figure. A wrong declination on Tau Sco was fixed in passing.
 - Orion gained Meissa so the head fixes its orientation.
+- Aquila was added later (Vega and Deneb were already present via Lyra and Cygnus; Altair
+  was the missing third of the Summer Triangle). Verified against published values: the
+  Tarazed-Altair-Alshain line is collinear to 0.011°, and the Summer Triangle separations
+  come out 23.85° / 34.20° / 38.01° against published 23.9 / 34.2 / 38.0.
+- Adding a constellation requires adding a matching entry to `placements` in
+  `ThreeBackground.tsx`; the list is indexed modulo its length, so a short list silently
+  stacks two figures in the same spot.
 
 ### Placement
 
@@ -282,10 +295,21 @@ Canvas sizes correctly to the viewport, WebGL initialises, no console errors.
 Constellations legible in the margins in dark *and* light mode, headline unobscured. Mobile
 hamburger and stacked hero correct. Featured-card hierarchy working.
 
-**Motion:** 0.647% of pixels change over 4s of floating (visible, still ambient); 0.000%
-over 3s with the tab hidden, confirming the pause is real and the clock does not run on;
-0.000% over 3.5s under `prefers-reduced-motion` with the canvas still drawn. Two frames 9s
-apart show Scorpius and Crux in clearly different positions.
+**Motion:** the first amplitude pass was too subtle to read as movement. "0.647% of pixels
+changed" proved *change*, not *perceptible* change — tracking the centroid of lit pixels in
+a text-free region showed only **7px horizontal / 9px vertical of travel over 7.5s**, about
+1px per second. Two causes: amplitude of ~26-48 world units at z ≈ -400..-600, where
+perspective shrinks it to a few screen pixels, and a ~114s cycle so any glance caught a
+sliver of the arc.
+
+Amplitudes were raised to 95-165 (x) and 70-125 (y) world units with a ~25-45s cycle, and
+the scattered field's spin roughly tripled so it does not look detached from the figures.
+Re-measured: **21px horizontal / 51px vertical over 7.5s** — about 6x the visible travel,
+0.796% of pixels changing over 4s.
+
+Pause behaviour re-confirmed after the change: 0.000% over 3s with the tab hidden, 0.000%
+over 3.5s under `prefers-reduced-motion` with the canvas still drawn. Headline stays clear
+of the figures across 20s of drift.
 
 Playwright and pngjs were installed with `--no-save`; `package.json` is unchanged.
 

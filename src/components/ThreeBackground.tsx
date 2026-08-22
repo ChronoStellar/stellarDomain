@@ -121,6 +121,7 @@ export default function ThreeBackground({
       { x: -260, y: 470, z: -560, span: 150, depth: 0.65 },
       { x: 300, y: -470, z: -520, span: 205, depth: 0.7 },
       { x: -880, y: -40, z: -600, span: 145, depth: 0.6 },
+      { x: 880, y: 60, z: -560, span: 200, depth: 0.75 },
     ];
 
     CONSTELLATIONS.forEach((constellation, ci) => {
@@ -278,14 +279,21 @@ export default function ThreeBackground({
         depth: place.depth,
         spin: 0.00006,
         float: {
-          ampX: (26 + Math.random() * 22) * place.depth,
-          ampY: (18 + Math.random() * 16) * place.depth,
-          speedX: 0.055 + Math.random() * 0.045,
-          speedY: 0.041 + Math.random() * 0.037,
+          // Amplitude is in world units at z ≈ -400..-600, where perspective
+          // shrinks it substantially on screen. The first pass used ~26-48 and
+          // measured only 7-9px of travel over 7.5s — real motion, but well
+          // below the threshold where anyone notices. These values put it in
+          // the tens of pixels, which reads as drifting without distracting.
+          ampX: (95 + Math.random() * 70) * place.depth,
+          ampY: (70 + Math.random() * 55) * place.depth,
+          // A full cycle previously took ~114s, so any given glance caught a
+          // sliver of the arc. ~25-45s per cycle keeps it calm but legible.
+          speedX: 0.15 + Math.random() * 0.1,
+          speedY: 0.11 + Math.random() * 0.08,
           phaseX: Math.random() * Math.PI * 2,
           phaseY: Math.random() * Math.PI * 2,
-          tiltAmp: 0.035 + Math.random() * 0.03,
-          tiltSpeed: 0.05 + Math.random() * 0.04,
+          tiltAmp: 0.07 + Math.random() * 0.05,
+          tiltSpeed: 0.12 + Math.random() * 0.08,
           tiltPhase: Math.random() * Math.PI * 2,
           baseRotX: group.rotation.x,
           baseRotZ: group.rotation.z,
@@ -327,7 +335,11 @@ export default function ThreeBackground({
       scene.add(points);
       starMaterials.push(material);
       disposables.push(geometry, material);
-      drifting.push({ object: points, depth: spec.depth, spin: 0.0004 * spec.depth });
+      drifting.push({
+        object: points,
+        depth: spec.depth,
+        spin: 0.0011 * spec.depth,
+      });
     }
 
     /* ---- Theme, motion, lifecycle ---------------------------------------- */
