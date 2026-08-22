@@ -3,6 +3,7 @@ import { getProfileData, getAllProjects, getAllPublications } from '@/lib/conten
 import Link from 'next/link';
 import WorkSection from '@/components/WorkSection';
 import AboutSection from '@/components/AboutSection';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Home() {
   const profile = getProfileData();
@@ -17,10 +18,13 @@ export default function Home() {
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(10px)', background: 'color-mix(in oklch, var(--bg) 82%, transparent)', borderBottom: '1px solid var(--border)' }}>
         <div className="container nav-padding" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <a href="/" className="heading-display" style={{ fontSize: '18px' }}>{profile.name}</a>
-          <div style={{ display: 'flex', fontSize: '13px' }} className="text-mono nav-links">
-            <a href="#work" className="nav-link" style={{ color: 'var(--text-muted)' }}>Work</a>
-            <a href="#publications" className="nav-link" style={{ color: 'var(--text-muted)' }}>Publications</a>
-            <a href="#about" className="nav-link" style={{ color: 'var(--text-muted)' }}>About</a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            <div style={{ display: 'flex', fontSize: '13px' }} className="text-mono nav-links">
+              <a href="#work" className="nav-link" style={{ color: 'var(--text-muted)' }}>Work</a>
+              <a href="#publications" className="nav-link" style={{ color: 'var(--text-muted)' }}>Publications</a>
+              <a href="#about" className="nav-link" style={{ color: 'var(--text-muted)' }}>About</a>
+            </div>
+            <ThemeToggle />
           </div>
         </div>
       </nav>

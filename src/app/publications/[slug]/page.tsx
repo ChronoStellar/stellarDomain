@@ -1,6 +1,7 @@
 import { getPublicationBySlug, getAllPublications } from '@/lib/content';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export async function generateStaticParams() {
   const publications = getAllPublications();
@@ -20,6 +21,16 @@ export async function generateMetadata({
     return {
       title: `${pub.title} | Publications`,
       description: pub.summary,
+      openGraph: {
+        title: pub.title,
+        description: pub.summary,
+        type: "article",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: pub.title,
+        description: pub.summary,
+      },
     };
   } catch (e) {
     return {
@@ -43,10 +54,11 @@ export default async function PublicationPage({
 
   return (
     <main style={{ position: 'relative', zIndex: 1 }} className="container">
-      <nav style={{ padding: '32px 0', borderBottom: '1px solid var(--border)', marginBottom: '40px' }}>
+      <nav style={{ padding: '32px 0', borderBottom: '1px solid var(--border)', marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link href="/#publications" className="text-mono link-hover" style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
           ← Back to home
         </Link>
+        <ThemeToggle />
       </nav>
 
       <article style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '100px' }}>

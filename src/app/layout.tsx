@@ -5,9 +5,24 @@ import Footer from "@/components/Footer";
 
 export async function generateMetadata(): Promise<Metadata> {
   const profile = getProfileData();
+  const title = `${profile.name} | ${profile.tagline}`;
+  const description = profile.bio.join(" ");
+
   return {
-    title: `${profile.name} | ${profile.tagline}`,
-    description: profile.bio.join(" "),
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      siteName: profile.name,
+      locale: "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 

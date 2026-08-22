@@ -1,6 +1,7 @@
 import { getProjectBySlug, getAllProjects } from '@/lib/content';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export async function generateStaticParams() {
   const projects = getAllProjects();
@@ -20,6 +21,18 @@ export async function generateMetadata({
     return {
       title: `${project.title} | Projects`,
       description: project.summary,
+      openGraph: {
+        title: project.title,
+        description: project.summary,
+        type: "article",
+        images: project.coverImage ? [project.coverImage] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: project.title,
+        description: project.summary,
+        images: project.coverImage ? [project.coverImage] : [],
+      },
     };
   } catch (e) {
     return {
@@ -43,10 +56,11 @@ export default async function ProjectPage({
 
   return (
     <main style={{ position: 'relative', zIndex: 1 }} className="container">
-      <nav style={{ padding: '32px 0', borderBottom: '1px solid var(--border)', marginBottom: '40px' }}>
+      <nav style={{ padding: '32px 0', borderBottom: '1px solid var(--border)', marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link href="/" className="text-mono link-hover" style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
           ← Back to home
         </Link>
+        <ThemeToggle />
       </nav>
 
       <article style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '100px' }}>

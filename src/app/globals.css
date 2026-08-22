@@ -17,6 +17,19 @@
   --display: 'Sora', system-ui, sans-serif;
 }
 
+[data-theme='dark'] {
+  --bg: oklch(14% 0.005 90);
+  --bg-alt: oklch(18% 0.005 90);
+  --card: oklch(16% 0.005 90);
+  --text: oklch(97.6% 0.005 90);
+  --text-muted: oklch(70% 0.01 90);
+  --text-faint: oklch(55% 0.01 90);
+  --border: oklch(28% 0.005 90);
+  --accent: oklch(65% 0.15 300);
+  --accent-dim: oklch(75% 0.13 300);
+  --accent-soft: oklch(30% 0.035 300);
+}
+
 * {
   box-sizing: border-box;
 }
