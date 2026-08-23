@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { withBasePath } from './basePath';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import gfm from 'remark-gfm';
@@ -66,7 +67,14 @@ async function renderMarkdown(markdown: string): Promise<string> {
     .use(rehypeKatex)
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(markdown);
-  return String(file);
+  return rewriteHtmlAssetPaths(String(file));
+}
+
+/** Rewrite src="/..." in rendered markdown HTML so images resolve under basePath. */
+function rewriteHtmlAssetPaths(html: string): string {
+  const base = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+  if (!base) return html;
+  return html.replace(/(<img\b[^>]*?\bsrc=")(\/[^"]*)(")/g, (_m, a, url, c) => `${a}${withBasePath(url)}${c}`);
 }
 
 export function getProfileData(): ProfileData {
