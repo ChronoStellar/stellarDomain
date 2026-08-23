@@ -1,4 +1,5 @@
 import { getProjectBySlug, getAllProjects } from '@/lib/content';
+import { withBasePath } from '@/lib/basePath';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import SiteNav from '@/components/SiteNav';
@@ -77,7 +78,7 @@ export default async function ProjectPage({
 
             {project.coverImage && (
               <div className="article-cover">
-                <img src={project.coverImage} alt="" decoding="async" />
+                <img src={withBasePath(project.coverImage)} alt="" decoding="async" />
               </div>
             )}
           </header>

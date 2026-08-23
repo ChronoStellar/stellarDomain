@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import type { ProjectMetadata } from '@/lib/content';
+import { withBasePath } from '@/lib/basePath';
 
 function ProjectCard({ project, featured }: { project: ProjectMetadata; featured?: boolean }) {
   return (
@@ -13,7 +14,7 @@ function ProjectCard({ project, featured }: { project: ProjectMetadata; featured
       <div className="project-card-media">
         {project.coverImage ? (
           <img
-            src={project.coverImage}
+            src={withBasePath(project.coverImage)}
             alt=""
             loading={featured ? 'eager' : 'lazy'}
             decoding="async"

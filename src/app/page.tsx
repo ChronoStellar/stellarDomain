@@ -1,5 +1,6 @@
 import ThreeBackground from '@/components/ThreeBackground';
 import { getProfileData, getAllProjects, getAllPublications } from '@/lib/content';
+import { withBasePath } from '@/lib/basePath';
 import Link from 'next/link';
 import WorkSection from '@/components/WorkSection';
 import AboutSection from '@/components/AboutSection';
@@ -31,7 +32,7 @@ export default function Home() {
               <div className="hero-links text-mono">
                 {/* CV is the primary action; email stays available beside it. */}
                 {profile.cv ? (
-                  <a href={profile.cv} target="_blank" rel="noopener noreferrer" className="hero-cta">
+                  <a href={withBasePath(profile.cv)} target="_blank" rel="noopener noreferrer" className="hero-cta">
                     See my CV
                   </a>
                 ) : (
