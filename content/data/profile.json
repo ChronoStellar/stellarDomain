@@ -1,14 +1,15 @@
 {
   "name": "Hendrik Nicolas Carlo",
-  "tagline": "I turn research-grade models into software people can actually use.",
+  "tagline": "Creating AI solutions with real world impact.",
   "bio": [
-    "Computer Science undergraduate and Apple Developer Academy graduate specializing in applied AI, computer vision, and ML deployment — bridging research-grade models with production iOS apps and cloud infrastructure."
+    "CS & Apple Developer Academy graduate engineering applied AI and computer vision models into production iOS apps and cloud systems."
   ],
   "email": "contact@example.com",
+  "cv": "/cv.pdf",
   "github": "https://github.com/ChronoStellar",
   "linkedin": "https://linkedin.com/in/hendrik-nicolas-carlo",
   "about": [
-    "I am a passionate software engineer with a strong focus on applied AI, computer vision, and machine learning deployment.",
+    "I am a software engineer with a strong focus on applied AI, computer vision, and machine learning deployment.",
     "During my time at the Apple Developer Academy, I learned how to bridge the gap between research-grade models and production-ready applications, delivering real-world value through intuitive interfaces and robust infrastructure.",
     "I'm always eager to learn new technologies, tackle complex problems, and build experiences that make a difference."
   ],

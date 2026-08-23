@@ -38,22 +38,52 @@ Shipping with one real project is strictly better than shipping with four where 
 hollow. As of this writing two of the four fabricated projects are gone; `rulaa.md`
 (invented "75% size reduction", "60fps") and both `example.com` publications remain.
 
-### Rewrite JKTDrive as a case study
+### Rewrite JKTDrive as a case study — SCAFFOLDED, needs your writing
 
-`content/projects/jktdrive.md` is currently a GitHub README pasted into a portfolio. Wrong
-register for the audience.
+`content/projects/jktdrive.md` has been restructured from a pasted GitHub README into a
+case study skeleton. The original is preserved at `content/projects/.jktdrive.README.bak`.
 
-- [ ] Restructure to **problem → approach → result**. Lead with the finding, not the repo.
-- [ ] Surface the evaluation result as a visual, not a paragraph. GPT-5 86.90% vs
-      InternVL2.5 86.45% across three categories is the most credible asset on the site and
-      it is currently buried in prose.
-- [ ] Cut the `Dataset/` and `Result/` directory trees and the Utils file listing — link to
+Everything factual in the new version came from your existing README — 273 scenes, 14
+categories across 3 capability groups, circular evaluation, GPT-5 86.90%, InternVL2.5
+86.45%. Nothing was invented. Six **«BRACKETED»** prompts mark where your account is
+needed; each is an HTML comment, so the page renders clean while the prompts stay visible
+in the file. Delete each comment as you replace it.
+
+The six, in order of how much they add:
+
+1. **Why you built it** — the origin. Coursework, thesis, self-directed? Did you watch an
+   existing benchmark fail on local footage? This tells a reader how you pick problems.
+2. **How the data got made** — image sourcing, who wrote the questions and distractors,
+   how the 14 categories were decided, what made a scene unusable. No repo shows this.
+3. **The engineering** — what you extended in VLMEvalKit, where the models ran, VRAM
+   limits, what broke. A specific debugging story beats a smooth summary.
+4. **What surprised you** — the highest-value paragraph. Did you expect GPT-5 to win by
+   more? Why does InternVL2.5 take the two messiest categories?
+5. **Limitations** — candidates supplied (small N, single city, MCQA measures recognition
+   not driving, no inter-annotator agreement, possible training contamination).
+6. **What's next** — two or three bullets.
+
+Also needs filling: **three missing accuracy figures** (Qwen-2.5-VL, Ovis-1.6-Gemma2,
+LLaVA-1.5) in the results table — they are in `Result/*/summary_results.csv`. With only the
+top two present a reader cannot see the spread, and the spread is the finding.
+
+Remaining from the original review:
+
+- [x] Restructure to **problem → approach → result**. Lead with the finding, not the repo.
+- [x] Surface the evaluation result as a table rather than prose. This needed `remark-gfm`
+      — the pipeline used plain `remark-html`, which does not support GFM tables, so any
+      table would have rendered as raw pipe characters. Added to both the project and
+      publication renderers.
+- [ ] Consider a chart for the per-category breakdown; the table carries the headline, but
+      the three-way capability split would read better as a visual.
+- [x] Cut the `Dataset/` and `Result/` directory trees and the Utils file listing — link to
       the repo for those.
-- [ ] Remove the Stargazers roster badge and the broken in-page anchors
-      (`#-the-goal-of-vlmevalkit` does not exist on the rendered page).
+- [x] Remove the Stargazers roster badge and the broken in-page anchors.
 - [ ] Resolve or remove the `TBD` BibTeX block. A citation block that says TBD reads as
       unfinished.
-- [ ] Reduce emoji-prefixed headings — they read as README, not publication.
+- [x] Reduce emoji-prefixed headings — they read as README, not publication.
+- [ ] Confirm the arXiv ID before re-adding the paper link. The old README cited
+      `2407.11691`; that should be checked rather than republished on trust.
 
 ### Also needs your words
 
@@ -345,7 +375,12 @@ Playwright and pngjs were installed with `--no-save`; `package.json` is unchange
 ## Suggested next steps
 
 1. **Phase 0 in full** — it changes whether a reader believes anything else on the page.
-2. The JKTDrive case-study rewrite.
-3. Put the `focus` card text in your own words (the tagline has been broadened; refine to
+2. Fill the six «BRACKETED» story prompts and three accuracy figures in the JKTDrive
+   scaffold.
+3. Drop a real `public/cv.pdf` in place — the hero's primary CTA now points at it and will
+   404 until it exists. The path is configurable via `cv` in `profile.json`.
+4. Put the `focus` card text in your own words (the tagline has been broadened; refine to
    taste).
-4. Pre-resize the JKTDrive cover image (currently 4096×2048, served at full weight).
+5. Pre-resize the JKTDrive cover image (currently 4096×2048, served at full weight).
+6. Set `metadataBase` and add an OG image before sharing the link anywhere — social
+   previews currently resolve against `http://localhost:3000`.

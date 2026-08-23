@@ -633,6 +633,18 @@ button:focus-visible,
   }
 }
 
+/* Once the grid stacks (<=860px) every card spans the full container, and 16/10
+   turns each cover into 340-480px of image with the title pushed off-screen. A
+   2/1 ratio keeps covers legible and the copy in view. Must stay after the
+   860px block above: the featured selector there has equal specificity, so this
+   wins only on source order. */
+@media (max-width: 860px) {
+  .project-card-media,
+  .project-card-featured .project-card-media {
+    aspect-ratio: 2 / 1;
+  }
+}
+
 /* Hero */
 .hero {
   position: relative;

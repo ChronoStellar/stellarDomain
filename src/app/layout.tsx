@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sora, Source_Sans_3, JetBrains_Mono } from "next/font/google";
 import { getProfileData } from "@/lib/content";
+import "katex/dist/katex.min.css";
 import "./globals.css";
 import Footer from "@/components/Footer";
 

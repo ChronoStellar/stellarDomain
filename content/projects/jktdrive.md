@@ -1,166 +1,189 @@
 ---
-title: "JKTDrive Benchmark"
+title: "JKTDrive: Benchmarking VLMs on Jakarta Traffic"
 date: "2024-07-15"
 tags: ["Autonomous Driving", "Vision-Language Models", "Benchmark", "Python"]
-summary: "A benchmarking repository designed to assess the real-world driving perception and reasoning capabilities of VLMs in chaotic urban traffic environments."
+summary: "Most driving benchmarks assume orderly, Western roads. JKTDrive tests whether vision-language models can reason about Jakarta traffic — and finds the gap between commercial and open-source models is far smaller than expected."
 pinned: true
 coverImage: "https://github.com/user-attachments/assets/bda86984-a5d8-4390-a01e-b4cab0ad5c6d"
 ---
 
-<img width="838" height="493" alt="image" src="https://github.com/user-attachments/assets/bda86984-a5d8-4390-a01e-b4cab0ad5c6d" />
+<!-- ─────────────────────────────────────────────────────────────────────────
+     SCAFFOLD — every «BRACKETED» block is a prompt for you to replace.
+     Delete each comment and its «…» once you have written the real thing.
+     Nothing here invents facts: the numbers below are the ones already in
+     your README. Anything I could not verify is left as a prompt.
+     ───────────────────────────────────────────────────────────────────── -->
 
-<b>Autonomous Driving Large Vision-Language Models Benchmark Evaluation. </b>
+## The problem
 
-<b>JKTDrive</b> is a <b>benchmarking</b> and <b>evaluation</b> repository designed to assess the real-world driving perception and reasoning capabilities of Vision–Language Models (VLMs) in Jakarta’s urban traffic environment based on Multiple-Choice Question Answer.
-Unlike standard autonomous driving benchmarks that focus on structured, Western-centric road conditions, JKTDrive targets dense, chaotic, and culturally unique traffic scenarios commonly found in Jakarta—including motorcycles weaving through lanes, informal traffic rules, roadside vendors, and ambiguous road markings.
+Autonomous driving benchmarks are built on roads that behave. Lanes are marked, traffic
+follows signals, and the vehicles around you are mostly cars moving in predictable
+directions. Models trained and evaluated on that world do well on that world.
 
-This repository also includes evaluation of both open-source and commercial VLMs using a circular evaluation technique on the custom JKTDrive Dataset.
+Jakarta is not that world. Motorcycles weave between lanes, right-of-way is negotiated
+rather than signposted, vendors and parked vehicles occupy the roadway, and lane markings
+are often ambiguous or absent. If a vision-language model is going to reason about driving
+anywhere outside the conditions it was benchmarked on, someone has to measure it there
+first.
 
-<a href="https://www.arxiv.org/abs/2407.11691">📝 Research Paper </a> •
-<a href="https://discord.gg/evDT4GZmxN"> 📜 License</a>
+JKTDrive is that measurement: 273 human-annotated road scenes from Jakarta, turned into
+multiple-choice questions across 14 reasoning categories, run against five vision-language
+models under identical conditions.
 
-<a href="#-the-goal-of-vlmevalkit">🎯Section 1</a> •
-<a href="#%EF%B8%8F-citation">🖊️Citation </a>
+<!-- ═══ YOUR STORY #1 — WHY YOU BUILT IT ═══════════════════════════════════
+     Two or three sentences, first person. The most valuable thing you can add
+     here is the origin: what made you notice the gap?
 
-## 📊 Evaluation Result
-The evaluation compares five Vision-Language Models across Perception Reasoning, Safety Compliance, and Urban Flow Complexity. GPT-5 achieved the highest overall accuracy (86.90%), followed closely by InternVL2.5 (86.45%). Among open-source models, InternVL2.5 showed the strongest overall performance.
+     Prompts, pick whichever is true:
+       • Was this coursework, a thesis, a lab project, or self-directed?
+       • Did you try an existing benchmark on local footage and watch it fail?
+       • Is this a road you drive? Did something specific prompt it?
 
-Model performance varies by category. GPT-5 performed best in Perception Reasoning, while InternVL2.5 achieved the highest accuracy in both Safety Compliance and Urban Flow Complexity, indicating strong robustness in complex urban driving scenarios.
+     Recruiters read this paragraph to learn how you choose problems. A real
+     origin story — even a mundane one — beats any amount of polish.
 
-## 📂 Dataset & Models
-### 🖼️ Dataset
-All images are captured from a forward - facing viewpoint that simulates an Autonomous Vehicle (AV) camera.
-- <b>Domain:</b>  Autonomous Driving & Vision - Language Reasoning
-- <b>Data Type:</b>  Real - world traffic scene images
-- <b>Total Images:</b>  273
-- <b>Annotation Type:</b>  Human - annotated multiple - choice QA (MCQA)
-- <b>Location:</b>  Jakarta, Indonesia
+     «WRITE 2-3 SENTENCES HERE»
+     ══════════════════════════════════════════════════════════════════════ -->
 
-<img width="4096" height="2048" alt="JKTDriveCornerCasesCategories" src="https://github.com/user-attachments/assets/5e2b599d-ac31-40ec-b5ef-32f4c04e723f" />
+## Building the dataset
 
+All 273 images are captured from a forward-facing viewpoint that simulates an autonomous
+vehicle's camera, then hand-annotated as multiple-choice questions with one correct answer
+and three distractors.
 
-JKTDrive is organized into several high-level categories, each representing a key reasoning capability required for autonomous driving in urban environments. 
-- `Navigation and Planning`: Scenarios that require understanding road layout, intersections, lane usage, and planning safe driving actions based on traffic rules
-  - Navigation Decision Making (NDM)
-  - Lane Recognition (LRE)   
-- `Spatial Reasoning`: Cases that involve interpreting spatial constraints such as narrow roads, one-way streets, and limited maneuvering space.
-  - Unidirectional Traffic (UTR)
-  - Narrow Roadway (NRO)
-- `Dynamic Agent Behaviour`: Situations involving moving agents such as vehicles and vulnerable road users, including cut-in events and evasive maneuvering.
-  - Evasive Maneuver Planning (UMP)
-  - VRU Cut-In (VRU)
-  - Vehicle Cut-In (VCI)
-  - Vehicle Recognition (VRE)
-- `Obstacles and Blockage`: Scenarios where driving is affected by static or temporary obstacles, including blocked lanes, parking situations, and roadway obstructions.
-  - Obstacles Recognition (ORE)
-  - Long Short Parking (LSP)
-- `Environmental Conditions`: Cases that capture degraded or suboptimal road and environmental conditions, such as poor road quality or reduced visibility.
-  - Inadequate Road Condition (IRC)
-- `Road Infrastructure and Signage`: Scenarios focused on understanding traffic signals, road signs, and structured traffic guidance that govern lawful driving behavior.
-  - Trajectory Planning Signs (TPS)
-  - Traffic Signal Recognition (TSR)
-  - Road Signs Recognition (RSR)
+The scenes are organised into 14 categories under three capability groups:
 
-### 🤖 Models
-JKTDrive benchmarks a diverse set of <b>Vision-Language Models (VLMs)</b>, including both <b>commercial</b> and <b>open-source models</b>, to provide a comprehensive comparison of performance across different model families and training paradigms.
-The evaluated models include:
-- Commercial Models
-    - GPT-5
-- Open-Source Models
-    - InternVL2.5
-    - LLaVA-1.5
-    - Qwen-2.5-VL
-    - Ovis-1.6-Gemma2
+| Capability group | What it tests | Categories |
+| --- | --- | --- |
+| **Perception Reasoning** | Reading road layout and planning a lawful action | Navigation Decision Making, Lane Recognition, Unidirectional Traffic, Narrow Roadway |
+| **Safety Compliance** | Obeying signage, signals, and road conditions | Obstacle Recognition, Long/Short Parking, Inadequate Road Conditions, Trajectory Planning Signs, Traffic Signal Recognition, Road Signs Recognition |
+| **Urban Flow Complexity** | Handling moving agents and evasive situations | Evasive Maneuver Planning, VRU Cut-In, Vehicle Cut-In, Vehicle Recognition |
 
-All models are evaluated under the same multiple-choice question answering (MCQA) setting, using identical prompts and response constraints to ensure a fair and consistent comparison. The evaluation focuses on each model’s ability to understand visual scenes, perform reasoning, and select the correct answer based on the given options.
+<!-- ═══ YOUR STORY #2 — HOW THE DATA GOT MADE ══════════════════════════════
+     This is the part no reader can guess and no repo makes obvious. It is
+     also the part that demonstrates real research work.
 
-## ⚒️ What is in this repository:
-## Dataset 
-This directory contains the image and annotation of JKTDrive dataset
-```bash
-Dataset/
-├── UrbanFlowComplexity/
-│   ├── EvasiveManeuverPlanning/
-│   │   ├── EMP01.png
-│   │   ├──  ...
-│   ├── VRUCut-In/
-│   ├── VehicleCut-In/
-│   └── VehicleRecognition/
-├── PerceptionReasoning/
-│   ├── NarrowRoadway/
-│   ├── UnidirectionalTraffic/
-│   ├── LaneRecognition/
-│   └── NavigationDecisionMaking/
-├── SafetyCompliance/
-│   ├── ObstacleRecognition/
-│   ├── LongShortParking/
-│   ├── InadequateRoadConditions/
-│   ├── TrajectoryPlanningSigns/
-│   ├── TrafficSignalRecognition/
-│   └── RoadSignsRecognition/
-└── annotation.json
-```
-In annotation.json the MCQA data format can be seen as followed: 
-```json
-{
-    "EMP01.png": {
-        "path": "UrbanFlowComplexity/EvasiveManeuverPlanning/EMP01.png",
-        "category": "UrbanFlowComplexity/EvasiveManeuverPlanning",
-        "question": "In this complex traffic scenario, what immediate hazard or condition should the autonomous vehicle prioritize in its evasive maneuver planning?",
-        "answers": "The potential for unpredictable movements from the blurry motorcycle.",
-        "distractor1": "The stationary vehicles parked on the side of the road.",
-        "distractor2": "The need to maintain a high speed to keep up with the flow of traffic.",
-        "distractor3": "The clear and open lane to the far left as a potential escape route."
-    }
-}
-```
+     Prompts:
+       • Where did the images come from? Dashcam? Phone? Public footage?
+         Roughly how long did collection take?
+       • Who wrote the questions and distractors — you alone, or a team?
+       • How did you decide the 14 categories? Did they emerge from the data,
+         or come from an existing taxonomy you adapted?
+       • Writing *good* distractors is genuinely hard: a wrong answer that is
+         too obviously wrong makes the question free. How did you handle that?
+       • Did you discard scenes? What made a scene unusable?
 
-## Result 
-This directory contains the raw result of VLMevalkit with circular evaluation and the summary of each models' performance.
-```bash
-Result/
-├── GPT5/
-│   ├── GPT_5_circular_perception_reasoning_group_results.csv
-│   ├── GPT_5_circular_safety_compliance_group_results.csv
-│   ├── GPT_5_circular_urban_flow_complexity_group_results.csv
-│   └── summary_results.csv
-├── InternVL2_5_8B/
-│   ├── InternVL2_5-8B_circular_PR_group_results.csv
-│   ├── InternVL2_5-8B_circular_SC_group_results.csv
-│   ├── InternVL2_5-8B_circular_UC_group_results.csv
-│   └── summary_results.csv
-├── LLaVA_v1_5_7B/
-│   ├── LLaVA_v1_5_7B_Custom_circular_PR_group_results.csv
-│   ├── LLaVA_v1_5_7B_Custom_circular_SC_group_results.csv
-│   ├── LLaVA_v1_5_7B_Custom_circular_UC_group_results.csv
-│   └── summary_results.csv
-├── Ovis1.6-Gemma2_9B/
-│   ├── ovis1_6_gemma2_9b_circular_PR_group_results.csv
-│   ├── ovis1_6_gemma2_9b_circular_SC_group_results.csv
-│   ├── ovis1_6_gemma2_9b_circular_UC_group_results.csv
-│   └── summary_results.csv
-├── Qwen2_5_VL_7B/
-│   ├── Qwen2_5_VL_7B_circular_PR_group_results.csv
-│   ├── Qwen2_5_VL_7B_circular_SC_group_results.csv
-│   ├── Qwen2_5_VL_7B_circular_UC_group_results.csv
-│   └── summary_results.csv
-└── getAccuracy.py (to get the summary)
-```
-## Utils
-- CreateFolders.py, containins dataset's folder structure and create those folder
-- JSON2TSV.ipynb, encodes image to base64 and convert the VQA dataset into .tsv format
-- JSONReformater.py, reformat the raw path and answer json into mcqa format
-- QAPairLabelingTools.py, gradio tools to view the mcqa dataset
-- Reformat4CircularEval.ipynb, copy each QA pairs to rotate the multiple choices 4 times
-- RenameFiles.py, abriviates the files into Ids e.g. EMP01
-- XLSX2JSON.py, normalize files into json format
+     «WRITE A PARAGRAPH OR TWO HERE»
+     ══════════════════════════════════════════════════════════════════════ -->
 
-## 🖊️ Citation
-If you find this work helpful, please consider to **star🌟** this repo. Thanks for your support!
-[![Stargazers repo roster for @open-compass/VLMEvalKit](https://reporoster.com/stars/ChronoStellar/JktDriveVLM)](https://github.com/ChronoStellar/JktDriveVLM/stargazers)
+## Making the evaluation fair
 
-You are welcome to use or modify JKTDrive Dataset or scripts in your research, please use the following BibTeX entry.
+A multiple-choice benchmark has an obvious failure mode: a model can score well by
+preferring a position — always answering "C" — rather than by understanding the image.
 
-```bib
-TBD
-```
+JKTDrive uses **circular evaluation** to remove that. Each question is asked four times
+with the answer options rotated, and a model only earns credit if it selects the correct
+answer in every rotation. Position bias stops being worth anything.
+
+Every model sees identical prompts and the same response constraints.
+
+<!-- ═══ YOUR STORY #3 — THE ENGINEERING ════════════════════════════════════
+     What did you actually have to build and debug? This is where your Python
+     and infrastructure skills become visible instead of implied.
+
+     Prompts:
+       • You built on VLMEvalKit — what did you have to change or extend to
+         make it accept a custom dataset?
+       • How did you run the open-source models? Local GPU, Colab, cloud?
+         Did VRAM limits shape which models you could evaluate?
+       • What broke? Anything about output parsing, rate limits, cost,
+         non-deterministic responses, models refusing to answer in format?
+       • Roughly how long did a full evaluation run take?
+
+     A specific, unglamorous debugging story is worth more here than a smooth
+     summary. It shows you have actually run this kind of thing end to end.
+
+     «WRITE A PARAGRAPH OR TWO HERE»
+     ══════════════════════════════════════════════════════════════════════ -->
+
+## Results
+
+Five models, evaluated under circular evaluation on all 273 scenes.
+
+| Model | Type | Overall accuracy |
+| --- | --- | --- |
+| GPT-5 | Commercial | **86.90%** |
+| InternVL2.5 | Open source | **86.45%** |
+| Qwen-2.5-VL | Open source | <!-- «ADD» --> |
+| Ovis-1.6-Gemma2 | Open source | <!-- «ADD» --> |
+| LLaVA-1.5 | Open source | <!-- «ADD» --> |
+
+<!-- ═══ FILL IN — the three missing accuracy figures ═══════════════════════
+     These are in Result/*/summary_results.csv in the repo. They matter: with
+     only the top two filled in, a reader cannot see the spread, and the
+     spread is the whole finding.
+     ══════════════════════════════════════════════════════════════════════ -->
+
+**The headline finding is the gap that isn't there.** GPT-5 leads overall at 86.90%, but
+InternVL2.5 — open source — trails it by 0.45 percentage points. On this benchmark, the
+commercial advantage in chaotic urban driving is close to noise.
+
+Performance also splits by capability. GPT-5 is strongest on Perception Reasoning, while
+InternVL2.5 takes both Safety Compliance and Urban Flow Complexity — the categories most
+directly about dense, unpredictable traffic.
+
+<!-- ═══ YOUR STORY #4 — WHAT SURPRISED YOU ═════════════════════════════════
+     The single highest-value paragraph in this document. Anyone can report
+     numbers; interpreting them is the research skill.
+
+     Prompts:
+       • Did you expect GPT-5 to win by more? Why do you think it didn't?
+       • InternVL2.5 wins the two categories about messy, dynamic traffic.
+         Is that a real capability difference or an artefact of the data?
+       • Which category was hardest across all models? What does that say
+         about what VLMs still cannot see?
+       • Any memorable individual failure — a scene every model got wrong?
+         A confident, completely incorrect answer? Those are the examples
+         readers remember.
+
+     «WRITE 2-4 SENTENCES HERE»
+     ══════════════════════════════════════════════════════════════════════ -->
+
+## Limitations
+
+<!-- ═══ YOUR STORY #5 — BE HONEST ══════════════════════════════════════════
+     Naming your own limits reads as confidence, not weakness. Reviewers
+     trust work that states its boundaries.
+
+     Candidates, keep the ones that are true:
+       • 273 scenes is small for a benchmark; the per-category slices are
+         smaller still, so category-level differences may not be significant.
+       • Single city, single camera viewpoint — findings may not transfer to
+         other dense-traffic cities.
+       • MCQA measures recognition, not driving. A model can pick the right
+         option without being able to act.
+       • Annotation was done by a small group, so there is no inter-annotator
+         agreement figure.
+       • Commercial models may have seen similar imagery in training; there
+         is no way to rule out contamination.
+
+     «WRITE 3-5 BULLETS HERE»
+     ══════════════════════════════════════════════════════════════════════ -->
+
+## What I'd do next
+
+<!-- ═══ YOUR STORY #6 — FORWARD LOOK ═══════════════════════════════════════
+     Two or three bullets. Shows you see the work as ongoing rather than
+     finished-and-filed.
+
+     Prompts: more scenes? more cities? open-ended answers instead of MCQA?
+     fine-tuning a model on the data? video instead of stills?
+
+     «WRITE 2-3 BULLETS HERE»
+     ══════════════════════════════════════════════════════════════════════ -->
+
+---
+
+**Repository:** [github.com/ChronoStellar/JktDriveVLM](https://github.com/ChronoStellar/JktDriveVLM)
+<!-- Add the paper link back once the arXiv ID is confirmed — the one in the old
+     README (2407.11691) should be double-checked before publishing. -->

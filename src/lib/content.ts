@@ -1,8 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { remark } from 'remark';
-import html from 'remark-html';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import gfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import remarkRehype from 'remark-rehype';
+import rehypeKatex from 'rehype-katex';
+import rehypeStringify from 'rehype-stringify';
 
 const contentDirectory = path.join(process.cwd(), 'content');
 
@@ -32,6 +37,8 @@ export interface ProfileData {
   about: string[];
   competencies: { name: string; description: string }[];
   email: string;
+  /** Path or URL to the CV. Falls back to the email CTA when unset. */
+  cv?: string;
   github: string;
   linkedin: string;
   focus?: {
@@ -40,6 +47,26 @@ export interface ProfileData {
     linkText?: string;
     linkHref?: string;
   };
+}
+
+/**
+ * Markdown -> HTML, with LaTeX via KaTeX.
+ *
+ * `singleDollarTextMath: false` is deliberate: prose here contains bare prices
+ * like "$0.01/request", and with single-dollar math enabled the parser treats
+ * the next `$` as a closing delimiter and swallows the text between them.
+ * Inline math therefore uses `$$...$$`.
+ */
+async function renderMarkdown(markdown: string): Promise<string> {
+  const file = await unified()
+    .use(remarkParse)
+    .use(gfm)
+    .use(remarkMath, { singleDollarTextMath: false })
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeKatex)
+    .use(rehypeStringify, { allowDangerousHtml: true })
+    .process(markdown);
+  return String(file);
 }
 
 export function getProfileData(): ProfileData {
@@ -106,10 +133,8 @@ export async function getProjectBySlug(slug: string) {
   const matterResult = matter(fileContents);
 
   // Use remark to convert markdown into HTML string
-  const processedContent = await remark()
-    .use(html)
-    .process(matterResult.content);
-  const contentHtml = processedContent.toString();
+  const processedContent = await renderMarkdown(matterResult.content);
+  const contentHtml = processedContent;
 
   return {
     slug,
@@ -150,10 +175,8 @@ export async function getPublicationBySlug(slug: string) {
 
   const matterResult = matter(fileContents);
 
-  const processedContent = await remark()
-    .use(html)
-    .process(matterResult.content);
-  const contentHtml = processedContent.toString();
+  const processedContent = await renderMarkdown(matterResult.content);
+  const contentHtml = processedContent;
 
   return {
     slug,

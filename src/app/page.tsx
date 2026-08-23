@@ -29,7 +29,15 @@ export default function Home() {
                 <p key={idx} className="hero-bio">{paragraph}</p>
               ))}
               <div className="hero-links text-mono">
-                <a href={`mailto:${profile.email}`} className="hero-cta">Get in touch</a>
+                {/* CV is the primary action; email stays available beside it. */}
+                {profile.cv ? (
+                  <a href={profile.cv} target="_blank" rel="noopener noreferrer" className="hero-cta">
+                    See my CV
+                  </a>
+                ) : (
+                  <a href={`mailto:${profile.email}`} className="hero-cta">Get in touch</a>
+                )}
+                <a href={`mailto:${profile.email}`} className="hero-link">Email ↗</a>
                 {profile.github && (
                   <a href={profile.github} target="_blank" rel="noopener noreferrer" className="hero-link">
                     GitHub ↗
