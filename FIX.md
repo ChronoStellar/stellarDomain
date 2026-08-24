@@ -1,101 +1,65 @@
 # Portfolio Fix List
 
 A UI/UX + recruiter-perspective review of the site, and the record of what was done about
-it. Branch `ui-add`, 2026-08-22.
+it. Branch `ui-add`, 2026-08-22. Updated 2026-08-24 (deployment, content, and asset work).
 
-**Status:** Phases 1–3 (design, bugs, accessibility) are complete and verified in a
-browser. **Phase 0 (content credibility) is in progress and is the highest-impact work
-remaining** — `aura.md` and `nexus.md` have been deleted; `rulaa.md` and both publications
-are still placeholder. Content decisions are left to the author, since which projects are
-real is not a call this review can make.
+**Status:** Phases 1–3 (design, bugs, accessibility) complete. **Phase 0 (content
+credibility) is now essentially done** — all placeholder content is gone, replaced with
+three real projects and one real publication. Phase 5 (deployment) documents a class of
+bug that only appeared once the site was actually served from GitHub Pages.
 
----
+**Live:** https://chronostellar.github.io/stellarDomain/
 
-## Phase 0 — Credibility (blocking, NOT DONE)
-
-**The problem:** roughly half the content is placeholder. Three of four projects and both
-publications are fabricated, complete with invented metrics. A reader who clicks
-"Read publication →" lands on `example.com` and then stops trusting the one project that
-is real.
-
-`content/projects/jktdrive.md` is the genuinely differentiating work — a Jakarta-specific
-VLM driving benchmark with a real dataset (273 human-annotated scenes) and a real
-evaluation across five models. It currently sits in a grid beside three fabrications. The
-fake work actively devalues the real work.
-
-- [x] Delete `content/projects/aura.md` (invented "40% faster", fake cover image path).
-- [x] Delete `content/projects/nexus.md` (invented infrastructure, fake cover image path).
-- [ ] Delete `content/projects/rulaa.md` (invented "75% size reduction", fake cover image).
-- [ ] Delete `content/publications/edge-ml.md` (`url: https://example.com/...`).
-- [ ] Delete `content/publications/reusable-ui.md` (`url: https://example.com/...`).
-- [ ] Replace `"email": "contact@example.com"` in `content/data/profile.json` with a real
-      address. A hero badge reading "Available for opportunities" above a dead contact
-      address is the single worst pairing on the page.
-- [ ] Re-audit the `competencies` claims in `profile.json` — anything of the form "shipped
-      N production apps" needs to be true and, ideally, linkable.
-
-Shipping with one real project is strictly better than shipping with four where three are
-hollow. As of this writing two of the four fabricated projects are gone; `rulaa.md`
-(invented "75% size reduction", "60fps") and both `example.com` publications remain.
-
-### Rewrite JKTDrive as a case study — SCAFFOLDED, needs your writing
-
-`content/projects/jktdrive.md` has been restructured from a pasted GitHub README into a
-case study skeleton. The original is preserved at `content/projects/.jktdrive.README.bak`.
-
-Everything factual in the new version came from your existing README — 273 scenes, 14
-categories across 3 capability groups, circular evaluation, GPT-5 86.90%, InternVL2.5
-86.45%. Nothing was invented. Six **«BRACKETED»** prompts mark where your account is
-needed; each is an HTML comment, so the page renders clean while the prompts stay visible
-in the file. Delete each comment as you replace it.
-
-The six, in order of how much they add:
-
-1. **Why you built it** — the origin. Coursework, thesis, self-directed? Did you watch an
-   existing benchmark fail on local footage? This tells a reader how you pick problems.
-2. **How the data got made** — image sourcing, who wrote the questions and distractors,
-   how the 14 categories were decided, what made a scene unusable. No repo shows this.
-3. **The engineering** — what you extended in VLMEvalKit, where the models ran, VRAM
-   limits, what broke. A specific debugging story beats a smooth summary.
-4. **What surprised you** — the highest-value paragraph. Did you expect GPT-5 to win by
-   more? Why does InternVL2.5 take the two messiest categories?
-5. **Limitations** — candidates supplied (small N, single city, MCQA measures recognition
-   not driving, no inter-annotator agreement, possible training contamination).
-6. **What's next** — two or three bullets.
-
-Also needs filling: **three missing accuracy figures** (Qwen-2.5-VL, Ovis-1.6-Gemma2,
-LLaVA-1.5) in the results table — they are in `Result/*/summary_results.csv`. With only the
-top two present a reader cannot see the spread, and the spread is the finding.
-
-Remaining from the original review:
-
-- [x] Restructure to **problem → approach → result**. Lead with the finding, not the repo.
-- [x] Surface the evaluation result as a table rather than prose. This needed `remark-gfm`
-      — the pipeline used plain `remark-html`, which does not support GFM tables, so any
-      table would have rendered as raw pipe characters. Added to both the project and
-      publication renderers.
-- [ ] Consider a chart for the per-category breakdown; the table carries the headline, but
-      the three-way capability split would read better as a visual.
-- [x] Cut the `Dataset/` and `Result/` directory trees and the Utils file listing — link to
-      the repo for those.
-- [x] Remove the Stargazers roster badge and the broken in-page anchors.
-- [ ] Resolve or remove the `TBD` BibTeX block. A citation block that says TBD reads as
-      unfinished.
-- [x] Reduce emoji-prefixed headings — they read as README, not publication.
-- [ ] Confirm the arXiv ID before re-adding the paper link. The old README cited
-      `2407.11691`; that should be checked rather than republished on trust.
-
-### Also needs your words
-
-- [ ] `focus.body` in `profile.json` is my draft. It is the most prominent sentence on the
-      page after the tagline, so it should be in your voice.
-- [ ] The tagline is now "I turn research-grade models into software people can actually
-      use." — broadened deliberately: the previous line named only the VLM work and
-      undersold the iOS and full-stack range. Note that "creating solutions" and similar
-      were avoided on purpose; they are the most common phrasing on engineering portfolios
-      and give a reader nothing to picture. Revise the wording, but keep it concrete.
+**The one open blocker** is the Google Drive demo video on the Rulaa page: it currently
+shows a sign-in wall to anonymous visitors. See Phase 5.
 
 ---
+
+## Phase 0 — Credibility (DONE)
+
+**The original problem:** roughly half the content was placeholder — three of four projects
+and both publications fabricated, complete with invented metrics and `example.com` links.
+
+All of it is now resolved.
+
+- [x] Delete `content/projects/aura.md` and `nexus.md` (invented metrics, fake cover paths).
+- [x] `rulaa.md` **rewritten as real work** — Rulaa is a genuine project (body measurement
+      and size recommendation, SMPL → MHR pipeline, fuzzy-logic recommender). The invented
+      "75% size reduction" version is gone.
+- [x] Delete `content/publications/edge-ml.md` and `reusable-ui.md` (`example.com` URLs).
+- [x] Real email in `profile.json` (`hendrikcarlo0@gmail.com`).
+- [x] `public/cv.pdf` now exists; the hero CTA resolves.
+- [x] **New real content:** `content/projects/trading-rl.md` (PPO trading agent) and
+      `content/publications/apple-leaf-glcm.md` (published CNN/GLCM comparison paper).
+
+### JKTDrive case study — DONE
+
+All six «BRACKETED» story prompts are filled, and the results table carries all five
+accuracy figures.
+
+- [x] Restructure to **problem → approach → result**.
+- [x] Results as a GFM table (needed `remark-gfm`; the pipeline used plain `remark-html`).
+- [x] Limitations written out (small N, single city, MCQA measures recognition not driving,
+      no inter-annotator agreement, possible contamination).
+- [x] **Fixed a self-contradiction in Results.** The table said InternVL2.5 81.32% / GPT-5
+      80.22%, while the prose below claimed "GPT-5 leads at 86.90%, InternVL2.5 trails by
+      0.45". Three conflicts in one section. Resolved in favour of the table, which also
+      matches the bolded claim: the open-source model wins, and the gap is 1.10 points.
+- [x] Grammar pass across the whole file (~26 fixes: tense drift, agreement, `commericial`,
+      `writting`, `execption`, `analized`, proper-noun casing).
+- [ ] Consider a chart for the per-category breakdown.
+- [ ] Confirm the arXiv ID before re-adding the paper link (`2407.11691` is unverified;
+      currently an HTML comment, so it does not render).
+
+### Still needs your words
+
+- [ ] `focus.body` in `profile.json` is a draft. It is the most prominent sentence on the
+      page after the tagline.
+- [ ] Reconcile the Rulaa numbers: the Results line says "5s inference time" while the
+      3D-measurement section says the new pipeline "took 30s slower". Both are yours to
+      confirm; a reader will notice.
+- [ ] "top 100th in the fashion & commerce" (Rulaa) is vague next to hard figures — top 100
+      in which store, which country, at what date?
 
 ## Phase 1 — Why the design read "standard" (DONE)
 
@@ -198,12 +162,10 @@ in dark. ~200KB of three.js, a WebGL context and a permanent rAF loop, mounted *
       a partial list with no way out. Now reports a count and always offers the archive link
       when results are truncated.
 - [x] **Project detail pages dead-ended.** Added next/prev footers.
-- [~] **`<img>` instead of `next/image`.** Not actionable as written: `next.config.ts` sets
-      `output: 'export'`, and the Next 16 static-export guide states the default image
-      loader is unsupported there — hence the existing `images.unoptimized`. Added
-      `loading="lazy"` / `decoding="async"` and empty `alt` on decorative covers instead.
-      A real fix needs either a custom loader or pre-resizing the 4096×2048 JKTDrive cover
-      before commit. **The two remaining eslint warnings are this, and are expected.**
+- [x] **`<img>` instead of `next/image`.** Confirmed not actionable: `output: 'export'`
+      disables Next's image optimizer entirely (hence `images.unoptimized`). Kept plain
+      `<img>` with `loading="lazy"` / `decoding="async"` and empty `alt` on decorative
+      covers. **Resolved instead by optimizing ahead of time** — see Phase 6.
 
 ---
 
@@ -299,6 +261,84 @@ also softened from `0.22` to `0.14` opacity — at full strength they read as a 
 
 ---
 
+## Phase 5 — Deployment on GitHub Pages (DONE, one item open)
+
+None of this was visible locally. GitHub Pages serves the site from a **subpath**
+(`/stellarDomain/`), and every bug below is a variation on the same theme: a URL that
+works at a domain root and 404s under a subpath.
+
+- [x] **Images pointed into `content/`.** `coverImage` was
+      `content/ressource/img/rulaa_hero.png`. Only `public/` is served — a path into
+      `content/` has no URL at all. It was also relative, so from `/projects/rulaa` it
+      resolved to `/projects/content/...`. Moved to `public/projects/<slug>/`.
+- [x] **Missing basePath on hand-written URLs.** Next rewrites paths it owns (`<Link>`, its
+      own chunks) but not opaque strings in markdown and JSON, so every image 404'd in
+      production while the CSS loaded fine. Added `withBasePath()` (`src/lib/basePath.ts`),
+      applied to cover images, inline markdown images, and the CV link.
+- [x] **The first basePath fix silently failed in CI.** It read
+      `process.env.NEXT_PUBLIC_BASE_PATH`, assigned in `next.config.ts`. But
+      `actions/configure-pages` **generates its own `next.config.js`**, which takes
+      precedence — so that assignment never ran on Pages, the helper returned `''`, and the
+      images shipped unprefixed anyway. Fixed by making the prefix a literal constant.
+      `NODE_ENV` is the only env value safe to read there, because Next inlines it at build
+      time. Verified by rebuilding with `next.config.ts` replaced by a CI-style config.
+- [x] **Dev server broke.** Hardcoding the constant moved *every route* to
+      `localhost:3000/stellarDomain` — `/`, `/projects`, all of it 404ing locally. Restored
+      with a `NODE_ENV` check so dev serves from the root and production keeps the prefix.
+- [x] **Nav anchor links escaped the site.** `SiteNav` renders its links as plain
+      `<a href>`, not `<Link>`, so basePath was never applied — `/#publications` sent
+      visitors to `chronostellar.github.io/#publications`, off the project entirely. Now
+      wrapped in `withBasePath()`. Note `<Link>` *does* prefix hash paths correctly; only
+      the raw anchors were affected.
+- [ ] **The Rulaa demo video shows a sign-in wall.** The embedded Google Drive file
+      (`/preview` iframe) returns 200 but redirects anonymous visitors to
+      `accounts.google.com/ServiceLogin` — verified against the live site. Either set the
+      file to "Anyone with the link" or re-host on unlisted YouTube/Vimeo, which is steadier
+      for a public page anyway. **Nothing in CI catches this**; the link checker only
+      validates local paths.
+
+### `scripts/check-links.mjs` — new
+
+Every bug above shipped as a **green build**: a wrong asset path compiles fine, the page
+returns 200, and only the image 404s. This script walks `out/` after the build and fails if
+any local `src`/`href` does not resolve on disk, or if an internal link is missing the
+basePath prefix. Wired into `deploy.yml`, so it blocks the deploy.
+
+Verified by reintroducing each bug into built HTML and confirming a non-zero exit.
+
+---
+
+## Phase 6 — Assets and content tooling (DONE)
+
+- [x] **Images were 4.45 MB total.** `jktdrive_classes.png` alone was 2.41 MB at
+      4096×2048, displayed at roughly 700px. Resized to max 1600px (2× the widest
+      container) and converted to WebP: **4.45 MB → 492 KB, −89%**. This also closes the
+      "pre-resize the JKTDrive cover" item from the original next-steps list.
+- [x] Quality verified numerically per image (mean absolute error vs the original), not
+      eyeballed. Photos at q82, anything with text or line art at q92 — lossy WebP rings
+      around sharp edges. All outputs land under 2.2/255.
+- [x] `scripts/optimize-images.mjs` — **new.** Repeatable pipeline: originals live in
+      `assets-original/` (gitignored), optimised WebP is written to `public/projects/`.
+- [x] `docs/IMAGES.md` — **new.** The workflow, the quality rationale, and why `next/image`
+      cannot help under static export.
+- [x] `.claude/skills/content-page/SKILL.md` — **new.** The frontmatter contract for
+      projects and publications, image and basePath rules, math syntax, and verification
+      steps. Encodes the conventions above so they are not rediscovered each time.
+- [x] **KaTeX math support.** `remark-math` + `rehype-katex` added to the pipeline.
+      Deliberately configured with `singleDollarTextMath: false`, so inline math uses
+      `$$…$$` — prose here contains bare prices like `$0.01/request`, and single-dollar
+      math makes the parser swallow everything to the next `$`.
+- [x] **Video embeds.** `.video-embed` wrapper in `globals.css` holds a 16:9 ratio around
+      an iframe, which has no intrinsic size and otherwise collapses or overflows on mobile.
+      Verified at 390 / 768 / 1200px.
+- [x] **Mobile card covers.** `.work-grid` stacks to one column below 860px, but the media
+      kept `aspect-ratio: 16/10`, so full-width cards produced 340–480px of image with the
+      title pushed off screen. Now `2/1` under 860px. The override must stay *after* the
+      860px block — the featured selector there has equal specificity, so it only wins on
+      source order.
+
+---
+
 ## Verification
 
 Everything below was checked, not assumed.
@@ -343,6 +383,35 @@ of the figures across 20s of drift.
 
 Playwright and pngjs were installed with `--no-save`; `package.json` is unchanged.
 
+### Deployment and assets (2026-08-24)
+
+**Live site, Chromium via Playwright:** `/`, `/projects/rulaa`, `/projects/jktdrive` —
+all images load (2/2, 3/3, 4/4), no failed requests except the Drive video sign-in
+redirect noted in Phase 5.
+
+**basePath under CI conditions:** rebuilt with `next.config.ts` replaced by a CI-style
+`next.config.js` and the environment unset — the exact condition that broke the first fix.
+All six images emit the `/stellarDomain` prefix; zero unprefixed internal links across the
+whole export.
+
+**Dev/production split:** `localhost:3000/`, `/projects`, `/projects/rulaa` all 200 with
+unprefixed image paths serving correctly; `/stellarDomain` correctly 404s in dev.
+
+**Link checker:** verified by reintroducing each bug class into built HTML — a typo'd image
+path and an unprefixed `/#publications` both produce a non-zero exit naming the offender.
+
+**Image quality:** mean absolute error per channel against each original, measured against
+the *resized* source (comparing across resolutions folds in resampling difference and
+overstates loss — that produced one false alarm at 5.20 versus a true 0.89). All six
+images land under 2.2/255.
+
+**Responsive:** project cards measured at 360 / 390 / 640 / 700 / 860 / 861 / 1024 / 1440px
+in both `/` and `/projects`; 2/1 ratio below 860px, desktop layout unchanged, no overflow.
+Video embed holds 16:9 at 390 / 768 / 1200px.
+
+**Nav anchors:** clicking Publications on the built site stays on the project, lands at
+`/stellarDomain/#publications`, and scrolls to the section.
+
 ---
 
 ## Files changed
@@ -370,17 +439,40 @@ Playwright and pngjs were installed with `--no-save`; `package.json` is unchange
 - `content/data/profile.json` — `stats` removed, `focus` object added.
 - `src/lib/content.ts` — `ProfileData.stats` replaced with optional `focus`.
 
+Added 2026-08-24:
+
+- `src/lib/basePath.ts` — **new.** `BASE_PATH` constant + `withBasePath()`. Deliberately
+  separate from `content.ts`, which imports `fs` and so cannot be pulled into client
+  components. Read the comment before changing how the value is derived.
+- `src/lib/content.ts` — unified pipeline (`remark-parse` → `gfm` → `remark-math` →
+  `remark-rehype` → `rehype-katex` → `rehype-stringify`) replacing `remark-html`, shared by
+  the project and publication renderers; rewrites `<img src="/…">` for basePath.
+- `next.config.ts` — `basePath` imported from the same constant, so Next's assets and
+  hand-written content paths cannot disagree.
+- `src/components/SiteNav.tsx` — nav anchors wrapped in `withBasePath()`.
+- `src/app/layout.tsx` — KaTeX stylesheet import.
+- `src/app/globals.css` — `.video-embed` / `<video>` styling; mobile card aspect ratio.
+- `scripts/check-links.mjs`, `scripts/optimize-images.mjs` — **new.**
+- `docs/IMAGES.md`, `.claude/skills/content-page/SKILL.md` — **new.**
+- `.github/workflows/deploy.yml` — link check wired in after the build.
+- `content/projects/trading-rl.md`, `content/publications/apple-leaf-glcm.md` — **new.**
+- `public/projects/**` — all images now WebP; `assets-original/` holds sources. Gitignored
+  and untracked, so the full-resolution originals live only on the authoring machine —
+  keep a backup elsewhere. The WebP files are downsampled and cannot be reversed.
+
 ---
 
 ## Suggested next steps
 
-1. **Phase 0 in full** — it changes whether a reader believes anything else on the page.
-2. Fill the six «BRACKETED» story prompts and three accuracy figures in the JKTDrive
-   scaffold.
-3. Drop a real `public/cv.pdf` in place — the hero's primary CTA now points at it and will
-   404 until it exists. The path is configurable via `cv` in `profile.json`.
-4. Put the `focus` card text in your own words (the tagline has been broadened; refine to
-   taste).
-5. Pre-resize the JKTDrive cover image (currently 4096×2048, served at full weight).
-6. Set `metadataBase` and add an OG image before sharing the link anywhere — social
-   previews currently resolve against `http://localhost:3000`.
+1. **Fix the Rulaa demo video** — it shows a sign-in wall to anonymous visitors right now,
+   on the project most likely to be watched. Set the Drive file to "Anyone with the link",
+   or re-host unlisted on YouTube/Vimeo.
+2. **Set `metadataBase`** and add an OG image before sharing the link anywhere — social
+   previews still resolve against `http://localhost:3000`, and the build warns about it
+   every time.
+3. Reconcile the Rulaa figures (5s inference vs 30s slower; the "top 100th" claim).
+4. Put the `focus` card text in your own words.
+5. Confirm the arXiv ID before re-adding the JKTDrive paper link.
+6. Consider a per-category chart for the JKTDrive capability breakdown.
+7. Fill `venue` and `url` on `apple-leaf-glcm.md` once the paper is indexed — both are
+   placeholders, and the empty `url` currently hides the "Read original" link.
