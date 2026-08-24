@@ -4,7 +4,7 @@ date: "2025-12-05"
 tags: ["Computer Vision", "3D Human Mesh", "Docker", "RunPod", "SwiftUI"]
 summary: "An iOS app that estimates body measurements from photos and matches
 them against real product size charts, so shoppers stop guessing sizes."
-coverImage: "/projects/rulaa/rulaa_hero.png"
+coverImage: "/projects/rulaa/rulaa_hero.webp"
 ---
 
 ## What it is
@@ -60,7 +60,7 @@ variation.
 
 Since it was almost impossible to train a real model with the data condition, we opted to do a simple calculation logic. If $$\Delta$$ (Delta) of body parts size (bust, torso length, etc) and the clothes size from the chart are close to or less than 0, that means it's tight and the higher the $$\Delta$$ is the looser it is. To make sure that we didn't hard-code it too much, we use fuzzy logic here to help define the relationship of that number difference.
 
-![Fuzzy Logic](/projects/rulaa/rulaa_fit_functions.png)
+![Fuzzy Logic](/projects/rulaa/rulaa_fit_functions.webp)
 
 Each body part gets this sort of membership and the end label is then weighted across each body part, for example bust and torso length have different tolerances for what feels small, so we give bust the biggest weight. This algorithm resulted in pretty good accuracy for blouses and shirts, which shows that not all problems immediately require AI.
 
@@ -70,7 +70,7 @@ As it might sound, getting measurements purely from a single image is quite the 
 
 To bridge this precision gap, we migrated to **MHR** (*Momentum Human Rig* / SAM 3D Body) in the second iteration. While architecturally analogous to SMPL in its parametric decomposition, MHR provided substantially higher mesh resolution and localized joint articulation fidelity, compressing our measurement error down to **3–5 cm** across standard evaluations.
 
-![Measurement](/projects/rulaa/rulaa_diagram.png)
+![Measurement](/projects/rulaa/rulaa_diagram.webp)
 
 SAM 3D Body itself doesn't have an estimator, so I had to make my own, I called it sam-3d-body-measurement. At the time of development MHR was a new model, so there were no body-part landmarks for the mesh and I had to configure them on my own, the logic of the algorithm itself mirrors SMPL-Anthropometry which uses 3D renderer in python and measure the circumference and length of specified body parts from the scanned mesh. One other thing that differs substantially is that MHR doesn't have a sense of *scale* so we need to input height to scale the model to real life.
 

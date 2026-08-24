@@ -30,7 +30,7 @@ This work was my thesis for my final year, however it's also a product of my own
 
 ## Building the dataset
 
-![Data Class](/projects/jktdrive/jktdrive_classes.png)
+![Data Class](/projects/jktdrive/jktdrive_classes.webp)
 
 All 273 images are captured from a forward-facing viewpoint that simulates an autonomous
 vehicle's camera, then hand-annotated as multiple-choice questions with one correct answer
@@ -52,7 +52,7 @@ The number 273 was actually a bit lower than what we expected. We wanted to go 3
 
 ## Making the evaluation fair
 
-![Models](/projects/jktdrive/jktdrive_models.png)
+![Models](/projects/jktdrive/jktdrive_models.webp)
 
 When choosing the models we picked them from the VLM leaderboard with around 7-8B parameters, so we could benchmark LLaVA as the 'failure' point, and when picking the commercial model, we picked GPT as the most well known general model at the time and we didn't add more because of budget constraints.
 
@@ -63,7 +63,7 @@ JKTDrive uses **circular evaluation** to remove that. Each question is asked fou
 
 Every model sees identical prompts and the same response constraints.
 
-![Data Sample](/projects/jktdrive/jktdrive_sample.png)
+![Data Sample](/projects/jktdrive/jktdrive_sample.webp)
 
 We actually made some edits to VLMEvalKit to fit circular eval, so the data becomes a .tsv of 2GB for each class (273*4 base-64 encoded image + text). This was run on a vast.ai instance with an RTX 5090 and 100GB of storage. Each run is saved, then the instance is wiped to clean the storage and cache, with the exception of GPT which we ran on our own device to load the data and model via API.
 
