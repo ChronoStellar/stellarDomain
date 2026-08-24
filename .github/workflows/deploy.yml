@@ -46,7 +46,12 @@ jobs:
         
       - name: Build with Next.js
         run: npx next build
-        
+
+      # A wrong asset path still builds and still returns 200 — only the image
+      # 404s. This fails the deploy instead of shipping it.
+      - name: Check for broken asset paths
+        run: node scripts/check-links.mjs
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
