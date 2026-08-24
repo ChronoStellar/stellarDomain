@@ -17,7 +17,9 @@ logic recommender.
 My role was as the lead AI Engineer, 2-person tech team, 2 designers, and a project manager. 
 Shipped to App Store / TestFlight, though as of right now it's not available.
 
-<!-- [DEMO VIDEO OR HERO FIGURE HERE] -->
+<div class="video-embed">
+  <iframe src="https://drive.google.com/file/d/1GeyIhbmDX-IKUVhyS0_lav8_Qt2GWqPt/preview" allow="autoplay" allowfullscreen title="Rulaa demo"></iframe>
+</div>
 
 **Results:** ~3cm measurement error rate · 40s cold start · 5s inference time · $0.01/request · top 100th in the fashion & commerce at time of launch in Indonesia
 
