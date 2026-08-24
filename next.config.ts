@@ -1,20 +1,16 @@
 import type { NextConfig } from "next";
 
+import { BASE_PATH } from "./src/lib/basePath";
+
 // GitHub Pages serves this repo from https://<user>.github.io/stellarDomain/,
-// so every URL needs that prefix. `actions/configure-pages` injects basePath in
-// CI, but declaring it here too means local builds match production and asset
-// paths in content can be resolved with the same value. Override with
-// NEXT_PUBLIC_BASE_PATH='' to serve from a domain root.
-const basePath =
-  process.env.NEXT_PUBLIC_BASE_PATH ?? (process.env.NODE_ENV === 'production' ? '/stellarDomain' : '');
-
-// Re-export so the same value is readable at runtime by withBasePath() in
-// src/lib/content.ts, which prefixes asset URLs written by hand in content.
-process.env.NEXT_PUBLIC_BASE_PATH = basePath;
-
+// so every URL needs that prefix. In CI, `actions/configure-pages` generates its
+// own next.config.js and sets basePath there; declaring it here keeps local
+// builds identical to production. Both read the same constant as the
+// withBasePath() helper, so Next's assets and hand-written content paths can
+// never disagree — which is what broke the images on Pages once before.
 const nextConfig: NextConfig = {
   output: 'export',
-  basePath,
+  basePath: BASE_PATH,
   images: {
     unoptimized: true,
   },
