@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { withBasePath } from './basePath';
+import { withBasePath, BASE_PATH } from './basePath';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import gfm from 'remark-gfm';
@@ -70,10 +70,15 @@ async function renderMarkdown(markdown: string): Promise<string> {
   return rewriteHtmlAssetPaths(String(file));
 }
 
-/** Rewrite src="/..." in rendered markdown HTML so images resolve under basePath. */
+/**
+ * Rewrite src="/..." in rendered markdown HTML so images resolve under basePath.
+ *
+ * Gated on BASE_PATH, not process.env: reading the environment here silently
+ * skipped the rewrite in CI and shipped unprefixed inline images that 404'd.
+ * See src/lib/basePath.ts.
+ */
 function rewriteHtmlAssetPaths(html: string): string {
-  const base = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-  if (!base) return html;
+  if (!BASE_PATH) return html;
   return html.replace(/(<img\b[^>]*?\bsrc=")(\/[^"]*)(")/g, (_m, a, url, c) => `${a}${withBasePath(url)}${c}`);
 }
 
