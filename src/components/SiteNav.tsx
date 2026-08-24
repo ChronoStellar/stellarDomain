@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
+import { withBasePath } from '@/lib/basePath';
 
 type NavLink = { href: string; label: string };
 
@@ -63,7 +64,7 @@ export default function SiteNav({
         <div className="site-nav-right">
           <nav className="text-mono site-nav-links" aria-label="Primary">
             {links.map((link) => (
-              <a key={link.href} href={link.href} className="nav-link">
+              <a key={link.href} href={withBasePath(link.href)} className="nav-link">
                 {link.label}
               </a>
             ))}
@@ -100,7 +101,7 @@ export default function SiteNav({
       <div id="site-nav-menu" className="site-nav-menu" data-open={open} hidden={!open}>
         <nav className="container text-mono" aria-label="Mobile">
           {links.map((link) => (
-            <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
+            <a key={link.href} href={withBasePath(link.href)} onClick={() => setOpen(false)}>
               {link.label}
             </a>
           ))}

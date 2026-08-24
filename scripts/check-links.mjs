@@ -47,6 +47,16 @@ for (const file of htmlFiles(OUT)) {
   for (const m of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
     const url = m[1];
     if (!url.startsWith('/') || url.startsWith('//')) continue; // external / protocol-relative
+    // A root-relative link with no basePath prefix escapes the site entirely on
+    // Pages: /#publications resolves to the domain root, not this project. Raw
+    // <a href> tags don't get basePath applied — only <Link> and Next's own
+    // assets do — so flag them explicitly.
+    if (BASE && !(url === BASE || url.startsWith(`${BASE}/`) || url.startsWith(`${BASE}#`))) {
+      const key = `${url}  (missing ${BASE} prefix)`;
+      if (!broken.has(key)) broken.set(key, new Set());
+      broken.get(key).add(file);
+      continue;
+    }
     if (resolves(url)) continue;
     if (!broken.has(url)) broken.set(url, new Set());
     broken.get(url).add(file);
