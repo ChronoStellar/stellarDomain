@@ -4,7 +4,7 @@ date: "2026-04-28"
 tags: ["Reinforcement Learning", "PPO", "CoreML", "SwiftUI", "Quantitative Finance"]
 summary: "I trained a PPO agent to size positions in SPY, aiming to match the index's return with a better Sharpe ratio by stepping aside during drawdowns. Over eight walk-forward years it beat buy-and-hold in exactly the years I hoped for — and lost to it everywhere else."
 pinned: true
-coverImage: "/projects/trading-rl/trading_rl_hero.webp"
+coverImage: "/projects/trading-rl/tabular_hero.jpg"
 ---
 
 ## The problem
