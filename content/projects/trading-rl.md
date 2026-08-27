@@ -2,20 +2,14 @@
 title: "Trading RL: Paper Trading with Reinforcement Learning"
 date: "2026-04-28"
 tags: ["Reinforcement Learning", "PPO", "CoreML", "SwiftUI", "Quantitative Finance"]
-<<<<<<< Updated upstream
-summary: "I trained a PPO agent to size positions in SPY, aiming to match the index's return with a better Sharpe ratio by stepping aside during drawdowns. Over eight walk-forward years it beat buy-and-hold in exactly the years I hoped for — and lost to it everywhere else."
-pinned: true
-coverImage: "/projects/trading-rl/trading_rl_hero.webp"
-=======
 summary: "I trained a PPO agent to size positions in SPY, aiming to match the index's return with a better Sharpe ratio by stepping aside during drawdowns. Over eight walk-forward years it beat buy-and-hold in exactly the years I hoped for and lost to it everywhere else."
 pinned: false
 coverImage: "/projects/trading-rl/tabular_hero.jpg"
->>>>>>> Stashed changes
 ---
 
 ## The problem
 
-I often get really scared to start a new hobby, especially one such as finance, since you know you gotta put your money and all. At first I didn't really know how to start with learning the basics of trading, where are the source, how do I even trade? But then I read that you can train an agent to trade using reinforcement learning. SO might as well learn both.
+I often get really scared to start investing, since you know you gotta put your money and all. At first I didn't really know how to start with learning the basics of trading, where are the source, how do I even trade? But then I read that you can train an agent to trade using reinforcement learning. SO might as well learn both (That's the gist of the project really).
 
 So I picked a target I could actually defend. **Match SPY's return, beat SPY's Sharpe ratio by going to cash during drawdowns.** Not outperform on return. The realistic edge for a retail-scale RL agent is not predicting tops, it is avoiding the worst 20% of bear days. That is a narrower claim, and it is falsifiable.
 
@@ -29,6 +23,7 @@ I built this to learn RL on a problem where the reward function is genuinely con
 - Implemented walk-forward evaluation with per-fold scaler fitting, which is what turned an encouraging result into an honest negative one.
 - Exported a PyTorch policy network to CoreML and reimplemented the entire feature pipeline in Swift for on-device inference.
 - Learned to read action entropy as the primary training diagnostic, and to distinguish reward-function failures from feature failures before adding model capacity.
+- Learned both trading strategies and reainforcement learning.
 
 ## Key considerations and trade-offs
 
@@ -42,13 +37,11 @@ I built this to learn RL on a problem where the reward function is genuinely con
 
 Shorting was the first thing I cut, and it was not a difficulty decision.
 
-Short positions have an asymmetric payoff, the gain is capped at 100% and the loss is unbounded. They carry borrow costs and recall risk that my simulator has no way to model, so a backtest containing shorts would be measuring a world that does not exist. And structurally, shorting fights SPY's roughly 9%/yr upward drift, which means a long-short agent has to be right considerably more often just to break even against a long-only one. Simply put I don't understand it and the I'd rather the model do what I understand.
-
-There is also an honesty argument. A long-only equity curve is auditable, anyone can check it against the index. A long-short one hides a lot of assumptions inside execution details that never get stated. I decided I would revisit shorts only after a long-only agent reliably beat SPY's Sharpe out-of-sample. It never did, so the question stayed closed.
+Short positions have an asymmetric payoff, the gain is capped at 100% and the loss is unbounded. They carry borrow costs and recall risk that my simulator has no way to model, so a backtest containing shorts would be measuring a world that does not exist. And structurally, shorting fights SPY's roughly 9%/yr upward drift, which means a long-short agent has to be right considerably more often just to break even against a long-only one. Simply put I don't understand it and the I'd rather the model do what I understand. TL;DR it's a bit too complicated to design the model to do position sizing from -1 to 1.
 
 ## The environment
 
-The agent sees a 10-dimensional observation: eight market features plus two channels the environment injects.
+The agent sees a 10-dimensional observation: eight market features plus two channels the environment injects. (These features are selected from hyper param tuning)
 
 | # | Feature | What it measures |
 | --- | --- | --- |
@@ -65,9 +58,9 @@ The agent sees a 10-dimensional observation: eight market features plus two chan
 
 Every feature is deliberately **scale-free**: a ratio, a bounded oscillator, or a percentage change. Raw prices and raw volumes do not transfer between assets, and I wanted a policy trained on SPY to be runnable on QQQ without retraining. Features 6 and 7 exist specifically for the stated goal: they are the two channels that describe *regime* rather than direction.
 
-An episode is 252 trading days from a random start inside the split. Transaction cost is 0.1% of trade size and slippage is 5 basis points, both charged against portfolio value on every reallocation.
+An episode is 252 trading days (that's the active trading days in a year) from a random start inside the split. Transaction cost is 0.1% of trade size and slippage is 5 basis points, both charged against portfolio value on every reallocation.
 
-One detail took me longer to find than it should have. The reward divides by rolling 20-day volatility, and when the agent sits in cash its returns are all zero, so that denominator collapses toward zero and the reward explodes. I floored the volatility estimate at 0.3% daily. Without the floor, the optimal policy is to hold cash until the denominator is tiny and then take one enormous swing — the agent had found this and I mistook it for a bug in my logging.
+One detail took me longer to find than it should have. The reward divides by rolling 20-day volatility, and when the agent sits in cash its returns are all zero, so that denominator collapses toward zero and the reward explodes. I floored the volatility estimate at 0.3% daily. Without the floor, the optimal policy is to hold cash until the denominator is tiny and then take one enormous swing, the agent had found this and I mistook it for a bug in my logging.
 
 ## Choosing what to reward
 
@@ -139,9 +132,9 @@ The consistent pattern across all three: **the agent reliably reduces drawdown a
 
 ## Shipping it to a phone
 
-The trained policy exports to CoreML and runs on-device in a SwiftUI app. The export takes only the actor path — `policy_net → action_net → clamp(0,1)` — and discards the value head, since inference only needs an allocation.
+The trained policy exports to CoreML and runs on-device in a SwiftUI app. The export takes only the actor path, `policy_net → action_net → clamp(0,1)` and discards the value head, since inference only needs an allocation.
 
-The hard part was not the conversion. It was that **iOS has no pandas**, so the entire feature pipeline had to be reimplemented in Swift, by hand, matching the Python `ta` library's conventions exactly — including Wilder's EWM smoothing in RSI and ADX, and MACD's 12/26/9 signal line. A subtly different RSI does not throw an error. It produces a plausible number, which gets z-scored into a plausible observation, which produces a confident and wrong allocation. There is no runtime check anywhere in the chain that would catch it.
+The hard part was not the conversion. It was that **iOS has no pandas**, so the entire feature pipeline had to be reimplemented in Swift, by hand, matching the Python `ta` library's conventions exactly, including Wilder's EWM smoothing in RSI and ADX, and MACD's 12/26/9 signal line. A subtly different RSI does not throw an error. It produces a plausible number, which gets z-scored into a plausible observation, which produces a confident and wrong allocation. There is no runtime check anywhere in the chain that would catch it.
 
 This is also why the scaler is exported as JSON alongside the model and copied into the app bundle. Re-running feature engineering regenerates those normalization statistics, and an old scaler in the bundle produces a systematically shifted view of the world. The retrain-to-app path is a checklist, and skipping the scaler copy is the failure I hit most often.
 
@@ -159,8 +152,6 @@ The app fetches 400 calendar days of bars to guarantee the 61 trading days that 
 
 **A double-charged turnover penalty.** The environment subtracts costs from the return before passing it to a reward function that subtracts costs again internally. So turnover is penalized twice, in two different unit systems. I found this while documenting the code rather than while writing it, and it plausibly contributes to the agent's under-trading.
 
-**Documentation drift.** The observation vector went from 17 dimensions to 10 during development, and the project docs still described the old one. Three separate `scaler.json` files sat in the repo carrying stale feature keys. Nothing broke which is exactly the problem, because nothing would tell me if it had.
-
 ## What I'd do differently
 
 Switch the reward to benchmark-relative first, before anything else. Every other improvement is downstream of optimizing the objective I actually stated.
@@ -172,9 +163,7 @@ I would also run the exploratory analysis before the training, not after. The qu
 The broader lesson is about evaluation. The version of this project with a single train/test split showed a result I would have been happy to publish. Walk-forward validation turned it into a negative result. The negative result is the real one, and the only reason I have it is that I built the harness that could produce it. It is worth more to me than the encouraging number would have been.
 
 ---
+![Poster_main](/projects/trading-rl/tabular_poster.png)
+![Poster_terms](/projects/trading-rl/tabular_terms.png)
 
 **Repository:** [github.com/ChronoStellar/Trading_RL](https://github.com/ChronoStellar/Trading_RL)
-<!-- TODO: confirm repo URL and slug before publishing.
-     Hero image still needs to be generated — MainPoster.png and
-     vertical-pos.png are candidates; run them through
-     scripts/optimize-images.mjs into /projects/trading-rl/. -->

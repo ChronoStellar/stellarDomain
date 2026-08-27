@@ -14,6 +14,10 @@ The constraint we picked was on-device only. No API keys, no network at runtime,
 
 There was a second constraint that isn't in the README. The notes we actually cared about are Indonesian, or more precisely Indonesian with English loanwords dropped in wherever the speaker felt like it: `deploy fix ke staging besok pagi`. Every date library and every off-the-shelf extraction heuristic assumes English. `besok` is tomorrow, `lusa` is the day after, `kamis depan` is next Thursday, and `minggu depan` means next calendar week rather than next Sunday — which is a distinction that matters and that nothing off the shelf gets right.
 
+<div class="video-embed">
+  <iframe src="https://drive.google.com/file/d/15dDMzoO4VK-73JbZ1Zxz9rTZssQ__DGe/view?usp=drive_link" allow="autoplay" allowfullscreen title="Rulaa demo"></iframe>
+</div>
+
 Tickit is a macOS app. You paste a note into a project, hit Process, and an agent running a 4-bit Gemma 4 E4B locally reads the note block by block and writes tasks — "ticks" — straight onto a kanban board, grouped into columns it either reuses or creates. Dated ticks show up in a deadline-sorted agenda. A global hotkey (⌥N) opens a floating capture bar from anywhere. It was built by four of us over ten days.
 
 ## Key learnings and technical outcomes
