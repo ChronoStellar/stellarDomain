@@ -2,7 +2,7 @@
 title: "Periodontal Charting by Voice"
 slug: periodontal-charting
 date: 2026-08-21
-summary: "An offline iPad app that turns Indonesian clinical dictation into a WHO-standard periodontal chart, using Wav2Vec2 with a lexicon-constrained CTC decoder. The parser is exact on clean text and the acoustic model beats Whisper by a wide margin, but the speaker-isolation layer I built to handle a noisy clinic has never once improved a transcript."
+summary: "An offline iPad app that turns Indonesian clinical dictation into a WHO-standard periodontal chart, with target speaker extraction, STT, and a custom parser"
 tags: ["swift", "coreml", "speech-recognition", "nlp", "on-device-ml"]
 coverImage: /projects/periodontal-charting/periodontal_hero.png
 ---
