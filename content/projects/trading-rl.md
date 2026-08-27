@@ -1,17 +1,23 @@
 ---
-title: "Trading RL: A PPO Agent That Learned to Be Afraid"
+title: "Trading RL: Paper Trading with Reinforcement Learning"
 date: "2026-04-28"
 tags: ["Reinforcement Learning", "PPO", "CoreML", "SwiftUI", "Quantitative Finance"]
+<<<<<<< Updated upstream
 summary: "I trained a PPO agent to size positions in SPY, aiming to match the index's return with a better Sharpe ratio by stepping aside during drawdowns. Over eight walk-forward years it beat buy-and-hold in exactly the years I hoped for — and lost to it everywhere else."
 pinned: true
 coverImage: "/projects/trading-rl/trading_rl_hero.webp"
+=======
+summary: "I trained a PPO agent to size positions in SPY, aiming to match the index's return with a better Sharpe ratio by stepping aside during drawdowns. Over eight walk-forward years it beat buy-and-hold in exactly the years I hoped for and lost to it everywhere else."
+pinned: false
+coverImage: "/projects/trading-rl/tabular_hero.jpg"
+>>>>>>> Stashed changes
 ---
 
 ## The problem
 
-Most retail trading-bot projects are built to beat the market on raw return, and most of them are quietly measured on a single backtest over a decade that only went up. If you train on 2010–2025 US equities and evaluate on 2010–2025 US equities, "always be fully invested" is a very hard baseline to beat, and almost any strategy that looks good is really just leverage in disguise.
+I often get really scared to start a new hobby, especially one such as finance, since you know you gotta put your money and all. At first I didn't really know how to start with learning the basics of trading, where are the source, how do I even trade? But then I read that you can train an agent to trade using reinforcement learning. SO might as well learn both.
 
-So I picked a target I could actually defend. **Match SPY's return, beat SPY's Sharpe ratio by going to cash during drawdowns.** Not outperform on return. The realistic edge for a retail-scale RL agent is not predicting tops — it is avoiding the worst 20% of bear days. That is a narrower claim, and it is falsifiable.
+So I picked a target I could actually defend. **Match SPY's return, beat SPY's Sharpe ratio by going to cash during drawdowns.** Not outperform on return. The realistic edge for a retail-scale RL agent is not predicting tops, it is avoiding the worst 20% of bear days. That is a narrower claim, and it is falsifiable.
 
 The system is a PPO agent that outputs a single continuous number: what fraction of the portfolio to hold in the asset, from 0 (all cash) to 1 (fully long). It trains on daily OHLCV bars in a custom Gymnasium environment, gets evaluated walk-forward, then exports to CoreML and runs on-device in a SwiftUI iOS app for paper trading.
 
@@ -28,7 +34,7 @@ I built this to learn RL on a problem where the reward function is genuinely con
 
 - **Long-only, allocation in [0, 1].** No shorting.
 - **Daily bars only.** No intraday, no order book, no news.
-- **Sharpe-based reward** rather than benchmark-relative — a decision I now think was the central mistake.
+- **Sharpe-based reward** rather than benchmark-relative.
 - **Single asset at a time.** SPY for training; QQQ and IWM used as generalization tests with no retraining.
 - **On-device inference.** No server, no brokerage integration, paper trading only.
 
@@ -36,9 +42,9 @@ I built this to learn RL on a problem where the reward function is genuinely con
 
 Shorting was the first thing I cut, and it was not a difficulty decision.
 
-Short positions have an asymmetric payoff — the gain is capped at 100% and the loss is unbounded. They carry borrow costs and recall risk that my simulator has no way to model, so a backtest containing shorts would be measuring a world that does not exist. And structurally, shorting fights SPY's roughly 9%/yr upward drift, which means a long-short agent has to be right considerably more often just to break even against a long-only one.
+Short positions have an asymmetric payoff, the gain is capped at 100% and the loss is unbounded. They carry borrow costs and recall risk that my simulator has no way to model, so a backtest containing shorts would be measuring a world that does not exist. And structurally, shorting fights SPY's roughly 9%/yr upward drift, which means a long-short agent has to be right considerably more often just to break even against a long-only one. Simply put I don't understand it and the I'd rather the model do what I understand.
 
-There is also an honesty argument. A long-only equity curve is auditable — anyone can check it against the index. A long-short one hides a lot of assumptions inside execution details that never get stated. I decided I would revisit shorts only after a long-only agent reliably beat SPY's Sharpe out-of-sample. It never did, so the question stayed closed.
+There is also an honesty argument. A long-only equity curve is auditable, anyone can check it against the index. A long-short one hides a lot of assumptions inside execution details that never get stated. I decided I would revisit shorts only after a long-only agent reliably beat SPY's Sharpe out-of-sample. It never did, so the question stayed closed.
 
 ## The environment
 
@@ -57,7 +63,7 @@ The agent sees a 10-dimensional observation: eight market features plus two chan
 | 9 | `position` | current allocation (env-injected) |
 | 10 | `equity_return` | portfolio value / initial cash − 1 (env-injected) |
 
-Every feature is deliberately **scale-free** — a ratio, a bounded oscillator, or a percentage change. Raw prices and raw volumes do not transfer between assets, and I wanted a policy trained on SPY to be runnable on QQQ without retraining. Features 6 and 7 exist specifically for the stated goal: they are the two channels that describe *regime* rather than direction.
+Every feature is deliberately **scale-free**: a ratio, a bounded oscillator, or a percentage change. Raw prices and raw volumes do not transfer between assets, and I wanted a policy trained on SPY to be runnable on QQQ without retraining. Features 6 and 7 exist specifically for the stated goal: they are the two channels that describe *regime* rather than direction.
 
 An episode is 252 trading days from a random start inside the split. Transaction cost is 0.1% of trade size and slippage is 5 basis points, both charged against portfolio value on every reallocation.
 
@@ -73,9 +79,9 @@ The reward is a per-step Sharpe contribution with a turnover penalty:
 reward = (r_t − rf) / σ_t  −  (cost + slippage) · |Δposition| / σ_t
 ```
 
-The penalty is divided by σ so it lives in the same units as the signal — a large rebalance in a calm market is penalized more than the same rebalance in a violent one, which is the correct incentive.
+The penalty is divided by σ so it lives in the same units as the signal, a large rebalance in a calm market is penalized more than the same rebalance in a violent one, which is the correct incentive.
 
-The problem is subtler and it is the finding I care most about. **Per-step Sharpe rewards risk-adjusted return, and "always fully long" scores well on it.** SPY has a positive Sharpe over almost any long window. An agent that learns to be perpetually 100% invested is not failing at this objective — it is *succeeding* at it. My reward function and my stated goal were different objectives, and I optimized the wrong one for the entire project.
+The problem is subtler and it is the finding I care most about. **Per-step Sharpe rewards risk-adjusted return, and "always fully long" scores well on it.** SPY has a positive Sharpe over almost any long window. An agent that learns to be perpetually 100% invested is not failing at this objective, it is *succeeding* at it. My reward function and my stated goal were different objectives, and I optimized the wrong one for the entire project.
 
 What I should have used is benchmark-relative:
 
@@ -91,7 +97,7 @@ My first evaluation was a single train/test split, and it looked good enough tha
 
 A single 252-day episode with a random start has enormous variance. Draw a start date in early 2023 and the agent looks brilliant; draw one in early 2022 and the same policy looks broken. I was reading skill off a die roll.
 
-So I built walk-forward validation instead. For each test year, it trains a completely fresh PPO agent on every year before it, fits a **new feature scaler on that fold's training data only**, and evaluates on the held-out year. Nothing about the future — not even the mean and standard deviation used for normalization — leaks backward. Then it repeats for the next year with an expanding window.
+So I built walk-forward validation instead. For each test year, it trains a completely fresh PPO agent on every year before it, fits a **new feature scaler on that fold's training data only**, and evaluates on the held-out year. Nothing about the future, not even the mean and standard deviation used for normalization, leaks backward. Then it repeats for the next year with an expanding window.
 
 Fitting the scaler per fold matters more than it sounds. In my first version the scaler was fit once on the full history, which meant the 2018 model was normalizing its inputs using statistics that included the 2020 crash. That is a small leak, and it was worth about 0.2 Sharpe of illusory performance.
 
@@ -119,15 +125,15 @@ But the *shape* of the failure is the interesting part, and it is not noise.
 
 **It lost the bull years by being underinvested.** Average position sits between 0.50 and 0.85 in most folds. In a year like 2019 or 2021, any allocation below 1.0 is pure cost. The agent is paying an insurance premium every year and collecting on it roughly once every four.
 
-**2021 is the most instructive fold.** The agent held 0.00 for the entire year — completely flat, in one of the strongest bull markets in the sample, forgoing a 30.51% return. That is not a mediocre policy, it is a *collapsed* one: the model found a local optimum where holding zero is safe, and under a Sharpe-based reward with a turnover penalty, doing nothing is genuinely defensible. Zero return divided by zero volatility is not punished the way a loss is. My reward function permitted this, and one fold out of eight fell into it.
+**2021 is the most instructive fold.** The agent held 0.00 for the entire year which is completely flat, in one of the strongest bull markets in the sample, forgoing a 30.51% return. That is not a mediocre policy, it is a *collapsed* one: the model found a local optimum where holding zero is safe, and under a Sharpe-based reward with a turnover penalty, doing nothing is genuinely defensible. Zero return divided by zero volatility is not punished the way a loss is. My reward function permitted this, and one fold out of eight fell into it.
 
 Generalization to other assets, using the SPY-trained model with no retraining:
 
 | Asset | Agent return | Agent Sharpe | B&H Sharpe | Drawdown improvement |
 | --- | --- | --- | --- | --- |
-| SPY | +19.26% | 1.31 | 1.94 | +1.63pp |
-| QQQ | +5.51% | 0.35 | 1.51 | +6.91pp |
-| IWM | +10.91% | 0.62 | 0.79 | +10.61pp |
+| SPY | +19.26% | 1.31 | 1.94 | +1.63% |
+| QQQ | +5.51% | 0.35 | 1.51 | +6.91% |
+| IWM | +10.91% | 0.62 | 0.79 | +10.61% |
 
 The consistent pattern across all three: **the agent reliably reduces drawdown and reliably gives up more return than the drawdown reduction is worth.** On IWM it cut the max drawdown by 10.6 percentage points — genuinely substantial — and still lost on Sharpe. It learned the defensive half of the objective and never learned when to stop being defensive.
 
@@ -153,7 +159,7 @@ The app fetches 400 calendar days of bars to guarantee the 61 trading days that 
 
 **A double-charged turnover penalty.** The environment subtracts costs from the return before passing it to a reward function that subtracts costs again internally. So turnover is penalized twice, in two different unit systems. I found this while documenting the code rather than while writing it, and it plausibly contributes to the agent's under-trading.
 
-**Documentation drift.** The observation vector went from 17 dimensions to 10 during development, and the project docs still described the old one. Three separate `scaler.json` files sat in the repo carrying stale feature keys. Nothing broke — which is exactly the problem, because nothing would tell me if it had.
+**Documentation drift.** The observation vector went from 17 dimensions to 10 during development, and the project docs still described the old one. Three separate `scaler.json` files sat in the repo carrying stale feature keys. Nothing broke which is exactly the problem, because nothing would tell me if it had.
 
 ## What I'd do differently
 

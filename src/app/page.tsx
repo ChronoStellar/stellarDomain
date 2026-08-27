@@ -69,7 +69,7 @@ export default function Home() {
           </div>
         </section>
 
-        <WorkSection projects={projects} limit={4} />
+        <WorkSection projects={projects} limit={5} />
 
         {publications.length > 0 && (
           <section id="publications" className="container section-padding" style={{ position: 'relative', zIndex: 1 }}>
