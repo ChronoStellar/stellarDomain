@@ -11,7 +11,7 @@ coverImage: "/projects/trading-rl/tabular_hero.jpg"
 
 I often get really scared to start investing, since you know you gotta put your money and all. At first I didn't really know how to start with learning the basics of trading, where are the source, how do I even trade? But then I read that you can train an agent to trade using reinforcement learning. SO might as well learn both (That's the gist of the project really).
 
-So I picked a target I could actually defend. **Match SPY's return, beat SPY's Sharpe ratio by going to cash during drawdowns.** Not outperform on return. The realistic edge for a retail-scale RL agent is not predicting tops, it is avoiding the worst 20% of bear days. That is a narrower claim, and it is falsifiable.
+I picked a target that I think is probable enough. **Match SPY's return, beat SPY's Sharpe ratio by going to cash during drawdowns.** Not outperform on return. The realistic edge for a retail-scale RL agent is not predicting tops, it is avoiding the worst 20% of bear days. That is a narrower claim, and it is falsifiable.
 
 The system is a PPO agent that outputs a single continuous number: what fraction of the portfolio to hold in the asset, from 0 (all cash) to 1 (fully long). It trains on daily OHLCV bars in a custom Gymnasium environment, gets evaluated walk-forward, then exports to CoreML and runs on-device in a SwiftUI iOS app for paper trading.
 
