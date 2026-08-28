@@ -2,7 +2,7 @@
 title: "Tickit"
 date: "2026-06-11"
 summary: "A macOS app that turns raw meeting notes into a kanban board of tasks, running a 4B model entirely on-device with no server and no API keys."
-tags: ["Swift", "SwiftUI", "MLX", "on-device", "LLM", "agents", "NLP", "macOS"]
+tags: ["SwiftUI", "MLX", "on-device", "LLM", "agents", "NLP"]
 coverImage: /projects/tickit/tickit_hero.png
 ---
 

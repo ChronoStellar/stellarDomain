@@ -3,7 +3,7 @@ title: "Periodontal Charting by Voice"
 slug: periodontal-charting
 date: 2026-08-21
 summary: "An offline iPad app that turns Indonesian clinical dictation into a WHO-standard periodontal chart, with target speaker extraction, STT, and a custom parser"
-tags: ["swift", "coreml", "speech-recognition", "nlp", "on-device-ml"]
+tags: ["SwiftUI", "CoreML", "STT", "NLP", "on-device", "3D", "Speech"]
 coverImage: /projects/periodontal-charting/periodontal_hero.png
 ---
 

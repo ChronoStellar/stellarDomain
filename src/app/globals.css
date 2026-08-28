@@ -33,6 +33,7 @@
 
   /* Spacing rhythm */
   --section-gap: 120px;
+  --container-pad: 28px;
   --radius-card: 16px;
   --radius-pill: 100px;
 }
@@ -119,7 +120,7 @@ button:focus-visible,
   /* Longhand on purpose: the `padding` shorthand also resets top/bottom, and in
      a media query this rule lands after .section-padding, zeroing the vertical
      rhythm on tablet and mobile. */
-  padding-inline: 28px;
+  padding-inline: var(--container-pad);
 }
 
 .heading-display {
@@ -183,8 +184,7 @@ button:focus-visible,
 }
 
 @media (max-width: 860px) {
-  :root { --section-gap: 88px; --fs-h2: 1.5rem; }
-  .container { padding-inline: 44px; }
+  :root { --section-gap: 88px; --fs-h2: 1.5rem; --container-pad: 44px; }
   .hero-padding { padding-block: 72px 64px; }
   .footer-padding { padding-block: 72px 52px; }
   .nav-padding { padding-block: 16px; }
@@ -195,14 +195,14 @@ button:focus-visible,
 }
 
 @media (max-width: 640px) {
-  :root { --section-gap: 72px; }
-  .container { padding-inline: 24px; }
+  :root { --section-gap: 72px; --container-pad: 24px; }
   .nav-padding { padding-block: 14px; }
   .hero-padding { padding-block: 56px 48px; }
   .footer-padding { padding-block: 64px 44px; }
   .h1-title { font-size: 34px !important; }
   .footer-heading { font-size: 28px !important; }
   .picker-btn { padding: 8px 14px !important; }
+
   .article { padding-block: 36px 32px; }
   .project-card-body { padding: 22px 22px 24px; }
   .focus-card { padding: 22px 24px; }
@@ -486,6 +486,39 @@ button:focus-visible,
   font-size: var(--fs-xs);
   color: var(--text-faint);
   margin: -20px 0 28px;
+}
+
+/* Mobile shows a shorter list than desktop, so the count suffix and the
+   archive link have separate variants; each hides at the other breakpoint. */
+@media (min-width: 641px) {
+  .work-count-mobile { display: none; }
+  .work-more-mobile-only { display: none; }
+}
+
+@media (max-width: 640px) {
+  /* Tag filters stay on one line and scroll sideways instead of wrapping into
+     a tall block that pushes the project cards off screen. Declared after the
+     base .picker-container rule so `nowrap` actually wins. */
+  .section-head { display: block; }
+  .section-head .section-title { margin-bottom: 18px; }
+
+  .picker-container {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* Bleed to the container edges so the row reads as scrollable rather than
+       stopping short of the screen edge. */
+    margin-inline: calc(var(--container-pad) * -1);
+    padding-inline: var(--container-pad);
+    padding-block: 2px;
+    scroll-padding-inline: var(--container-pad);
+    -webkit-overflow-scrolling: touch;
+  }
+  .picker-container::-webkit-scrollbar { display: none; }
+  .picker-btn { flex: 0 0 auto; white-space: nowrap; }
+
+  .work-count-desktop { display: none; }
 }
 
 /* Project cards — three weights: featured, standard, and the archive list. */
@@ -1070,4 +1103,12 @@ button:focus-visible,
   align-items: center;
   gap: 6px;
   color: var(--accent);
+}
+
+/* Mobile teaser: only the first three projects are shown on small screens, with
+   the archive link below covering the rest. Kept at the end of the file because
+   it competes with `.project-card { display: flex }` on equal specificity, so
+   source order is what decides it. */
+@media (max-width: 640px) {
+  .project-card-mobile-hidden { display: none; }
 }

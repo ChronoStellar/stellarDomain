@@ -5,11 +5,23 @@ import Link from 'next/link';
 import type { ProjectMetadata } from '@/lib/content';
 import { withBasePath } from '@/lib/basePath';
 
-function ProjectCard({ project, featured }: { project: ProjectMetadata; featured?: boolean }) {
+const MOBILE_LIMIT = 3;
+
+function ProjectCard({
+  project,
+  featured,
+  mobileHidden,
+}: {
+  project: ProjectMetadata;
+  featured?: boolean;
+  mobileHidden?: boolean;
+}) {
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className={`card-hover project-card${featured ? ' project-card-featured' : ''}`}
+      className={`card-hover project-card${featured ? ' project-card-featured' : ''}${
+        mobileHidden ? ' project-card-mobile-hidden' : ''
+      }`}
     >
       <div className="project-card-media">
         {project.coverImage ? (
@@ -63,6 +75,12 @@ export default function WorkSection({ projects, limit }: { projects: ProjectMeta
   const showFeatured = !selectedTag && displayProjects.length > 0;
   const [lead, ...rest] = displayProjects;
 
+  // Small screens show a shorter teaser than desktop. This is done in CSS on
+  // the cards themselves rather than by slicing here, so the markup stays the
+  // same on server and client and there is no hydration mismatch.
+  const truncateOnMobile = limit !== undefined && displayProjects.length > MOBILE_LIMIT;
+  const mobileHiddenCount = truncateOnMobile ? displayProjects.length - MOBILE_LIMIT : 0;
+
   return (
     <section id="work" className="container section-padding" style={{ position: 'relative', zIndex: 1 }}>
       <div className="section-head">
@@ -97,7 +115,12 @@ export default function WorkSection({ projects, limit }: { projects: ProjectMeta
         {selectedTag
           ? `${filteredProjects.length} ${filteredProjects.length === 1 ? 'project' : 'projects'} tagged ${selectedTag}`
           : `${projects.length} ${projects.length === 1 ? 'project' : 'projects'}`}
-        {hiddenCount > 0 && ` · showing ${displayProjects.length}`}
+        {hiddenCount > 0 && (
+          <span className="work-count-desktop"> · showing {displayProjects.length}</span>
+        )}
+        {mobileHiddenCount > 0 && (
+          <span className="work-count-mobile"> · showing {MOBILE_LIMIT}</span>
+        )}
       </p>
 
       {showFeatured ? (
@@ -105,16 +128,24 @@ export default function WorkSection({ projects, limit }: { projects: ProjectMeta
           <ProjectCard project={lead} featured />
           {rest.length > 0 && (
             <div className="work-grid">
-              {rest.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
+              {rest.map((project, i) => (
+                <ProjectCard
+                  key={project.slug}
+                  project={project}
+                  mobileHidden={truncateOnMobile && i + 1 >= MOBILE_LIMIT}
+                />
               ))}
             </div>
           )}
         </>
       ) : (
         <div className="work-grid">
-          {displayProjects.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
+          {displayProjects.map((project, i) => (
+            <ProjectCard
+              key={project.slug}
+              project={project}
+              mobileHidden={truncateOnMobile && i >= MOBILE_LIMIT}
+            />
           ))}
         </div>
       )}
@@ -130,8 +161,8 @@ export default function WorkSection({ projects, limit }: { projects: ProjectMeta
 
       {/* Always offer the archive link when results are truncated — the previous
           version only rendered it for the unfiltered list, stranding filtered views. */}
-      {hiddenCount > 0 && (
-        <div className="work-more">
+      {(hiddenCount > 0 || mobileHiddenCount > 0) && (
+        <div className={`work-more${hiddenCount > 0 ? '' : ' work-more-mobile-only'}`}>
           <Link href="/projects" className="text-mono work-more-link">
             View all {filteredProjects.length} projects →
           </Link>

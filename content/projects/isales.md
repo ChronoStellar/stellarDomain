@@ -3,13 +3,7 @@ title: "Chasing Controllable Emotion in On-Device TTS"
 slug: isales
 date: 2026-07-10
 summary: "Four attempts at giving a small on-device TTS model an emotion knob — decoder conditioning, cross-encoder style transfer, retrieval over a voice library, and teacher distillation. Every route to model-native emotion failed, and the thing that shipped reads emotion instead of producing it."
-tags:
-  - tts
-  - speech
-  - pytorch
-  - on-device
-  - ios
-  - evaluation
+tags: ["TTS", "SwiftUI", "on-device", "LLM", "Speech"]
 coverImage: /projects/isales/isales_hero.png
 ---
 

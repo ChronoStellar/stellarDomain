@@ -1,7 +1,7 @@
 ---
 title: "Trading RL: Paper Trading with Reinforcement Learning"
 date: "2026-04-28"
-tags: ["Reinforcement Learning", "PPO", "CoreML", "SwiftUI", "Quantitative Finance"]
+tags: ["Reinforcement Learning", "PPO", "CoreML", "SwiftUI"]
 summary: "A PPO agent to size positions in SPY, aiming to match the index's return with a better Sharpe ratio by stepping aside during drawdowns."
 pinned: false
 coverImage: "/projects/trading-rl/tabular_hero.jpg"

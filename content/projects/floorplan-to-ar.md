@@ -1,7 +1,7 @@
 ---
 title: "Turning scanned floor plans into AR geometry"
 date: 2026-05-22
-tags: ["computer vision", "opencv", "python", "swift", "3d", "arkit"]
+tags: ["Computer Vision", "opencv", "python", "SwiftUI", "3D"]
 summary: "End-to-end pipeline from raster to 3D scan and a furniture (chair) 3D model generator: a study case"
 coverImage: "/projects/floorplan-to-ar/floorplan_hero.png"
 ---

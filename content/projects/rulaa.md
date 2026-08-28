@@ -1,7 +1,7 @@
 ---
 title: "Rulaa: Body Measurement & Size Recommendation"
 date: "2025-12-05"
-tags: ["Computer Vision", "3D Human Mesh", "Docker", "RunPod", "SwiftUI"]
+tags: ["Computer Vision", "3D", "Docker", "RunPod", "SwiftUI"]
 summary: "An iOS app that estimates body measurements from photos and matches
 them against real product size charts, so shoppers stop guessing sizes."
 coverImage: "/projects/rulaa/rulaa_hero.webp"
