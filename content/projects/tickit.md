@@ -1,42 +1,51 @@
 ---
 title: "Tickit"
 date: "2026-06-11"
-summary: "A macOS app that turns raw meeting notes into a kanban board of tasks, running a 4B model entirely on-device with no server and no API keys."
+summary: "A macOS app that turns raw meeting notes into a kanban board of tasks, running a 4B model entirely on-device with no server and no API."
 tags: ["SwiftUI", "MLX", "on-device", "LLM", "agents", "NLP"]
 coverImage: /projects/tickit/tickit_hero.png
 ---
 
 ## The problem
 
-Meeting notes are where tasks go to die. You type them fast, in whatever mix of languages and punctuation your brain is running that day, and then either you transcribe them into a task manager by hand or you never look at them again. The obvious fix is to throw the note at an LLM and ask for JSON. That works until you try to do it without sending your client notes to somebody else's server.
+Meeting notes are where tasks go to die. You type them fast, in whatever mix of languages and punctuation your brain is running that day, and then either you transcribe them into a task manager by hand or you never look at them again. The obvious fix is to throw the note at an LLM and ask for list. That works until you try to do it without sending your client notes to somebody else's server.
 
-The constraint we picked was on-device only. No API keys, no network at runtime, no note ever leaving the machine. That constraint shapes the whole project, because it takes the good models away from you. A 4-billion-parameter quantized model running in unified memory on a MacBook forgets instructions, emits JSON with a paragraph of apology wrapped around it, and silently translates Indonesian notes into English task titles because English is what its instruction tuning rewards.
-
-There was a second constraint. The notes we actually cared about are Indonesian, or more precisely Indonesian with English loanwords dropped in wherever the speaker felt like it: `deploy fix ke staging besok pagi`. Every date library and every off-the-shelf extraction heuristic assumes English. `besok` is tomorrow, `lusa` is the day after, `kamis depan` is next Thursday, and `minggu depan` means next calendar week rather than next Sunday — a distinction nothing off the shelf gets right.
+To make sure that never happens we took a few consideration when designing this app. The first constraint we picked was on-device only. No API keys, no network at runtime, no note ever leaving the machine. That constraint shapes the whole project, because it takes the good models away from you. The second one is that the model will be bilingual, it should understand our English and Indonesian notes.
 
 <div class="video-embed">
-  <iframe src="https://drive.google.com/file/d/15dDMzoO4VK-73JbZ1Zxz9rTZssQ__DGe/view?usp=drive_link" allow="autoplay" allowfullscreen title="Rulaa demo"></iframe>
+  <iframe src="https://drive.google.com/file/d/15dDMzoO4VK-73JbZ1Zxz9rTZssQ__DGe/preview" allow="autoplay" allowfullscreen title="tickit demo"></iframe>
 </div>
 
 Tickit is a macOS app. You paste a note into a project, hit Process, and an agent running a 4-bit Gemma 4 E4B locally reads the note block by block and writes tasks — "ticks" — straight onto a kanban board, grouped into columns it either reuses or creates. Dated ticks show up in a deadline-sorted agenda. A global hotkey (⌥N) opens a floating capture bar from anywhere. It was built by four of us over ten days.
 
 ## Key learnings and technical outcomes
 
-- **A tool-calling ReAct loop beats one-shot JSON extraction on small models.** The model never returns a document we have to parse and validate. It emits one JSON tool call per turn, we execute it, and we feed the observation back. Eleven tools: six read, three write, `ask_user`, and `finish`.
-- **Deterministic NLP carries the parts the model is bad at.** `TemporalResolver.swift` is 1,403 lines — the largest file in the project by nearly 3× — and contains no inference at all. Date phrases are resolved to absolute ISO dates *before* the model sees the block, and handed to it as authoritative.
-- **Rules live in JSON, not Swift.** Four rule packs per locale (extraction, temporal, lexicon, clarification) with a full `en-US` and `id-ID` set — 289 and 352 extraction entries respectively, 98 and 125 action verbs. Adding a language is a new set of JSON files, not a code change.
-- **Guardrails for small-model failure modes are their own subsystem.** Per-block step cap scaled to estimated task count (`min(40, 10 + tasks × 2)`), duplicate-call suppression via canonical arg signatures, no-progress exit after 2–3 dead turns, and idempotent writes so a re-run can't double-post.
-- **Swapping models is a config edit.** `model_config.json` pins the HF repo and token budgets; `MLXRunner.swift` is the only file in the codebase that imports MLX.
-- **Memory is managed explicitly.** The model stays resident between calls and is unloaded 20 seconds after the last run, which releases several GB of unified memory back to the machine.
+- **Agentic Workflow design is closer to software engineering than actual AI pipelining.**, This has been a rough lesson to learn especially how to figure out a way to design an actually working agent in the on edge environment, but after lots and lots of try and error we found a design that I'll elaborate in the next points. 
+
+- **Small models collapse under big extraction tasks**; the ReAct loop saved us. Early on, expecting a lightweight model to output a massive, valid JSON schema in one shot was wishful thinking. Shifting to an iterative tool-calling loop changed everything. Instead of praying for a clean document parse, the model makes one tool call at a time across eleven granular tools (six reads, three writes, ask_user, and finish). We execute it, hand back the observation, and let it take the next step. It’s significantly more reliable and far easier to debug.
+
+- **I stopped trying to make the LLM do deterministic work.** `TemporalResolver.swift` ballooned to 1,403 lines—nearly triple the size of any other file in the project—and it doesn't contain a single line of model inference. Date math and relative time phrases are absolute minefields for small models. Resolving those phrases into rock-solid ISO dates before the model ever sees the text took a huge cognitive load off the LLM and eliminated a massive class of subtle hallucinations.
+
+- **Separating linguistic rules from Swift kept our sanity intact**. I didn't want language support hardcoded into application logic. Moving extraction patterns, temporal definitions, lexicons, and clarification heuristics into standalone JSON rule packs meant handling 289 English vs. 352 Indonesian extraction entries, and 98 vs. 125 action verbs without touching a line of Swift. Expanding locale support is just data authoring now, not a recompile.
+
+- **Guardrails can't be an afterthought—they had to become their own subsystem.** Sub-4B models get stuck in loops, repeat themselves, or spiral when confused. I had to build defensive boundaries: a dynamic step ceiling tied to task volume (min(40, 10 + tasks × 2)), signature hashing to kill duplicate tool calls, an early-exit circuit breaker after 2–3 unproductive turns, and strictly idempotent writes so retries never leave duplicate artifacts.
+
+- **Isolating MLX was worth the architectural discipline**. Keeping `MLXRunner.swift` as the sole boundary importing MLX paid off immediately. Swapping out model checkpoints, updating Hugging Face paths, or tuning token budgets is just a quick edit in `model_config.json`, insulating the core app logic from inference-engine churn.
+
+- **Unified memory forced us to be good citizens**. Leaving a multi-gigabyte model parked in RAM indefinitely on macOS isn't acceptable. Keeping it warm between rapid calls but aggressively unloading it after a 20-second idle window gave us the right balance between responsive interactions and giving the user their memory back.
 
 ## Key considerations and trade-offs
 
-- **On-device only, which caps model quality at ~4B.** Much of the rest of the architecture is compensation for that ceiling.
-- **The board is the vocabulary.** There is no separate tag taxonomy — the project's existing columns are what the agent groups against, so its category space is whatever the user already made.
-- **Live writes, not a staged diff.** Tools mutate `AppStore` immediately and persist. That makes the run observable as it happens, and it makes a bad run something you undo rather than something you approve.
-- **Two questions per note, hard cap.** `ask_user` decrements a budget of 2 for the whole note; past that the tool tells the model to make its best inference and proceed.
-- **A 15-word floor on the project description before Process unlocks.** The description is the agent's stable context, and an empty one produced garbage columns.
-- **Indonesian is the default locale**, with English as the parity port, which is the reason the temporal work is as heavy as it is.
+- **Choosing local-first capped our intelligence ceiling at ~4B**. Deciding early on that data should never leave the machine meant accepting the harsh limits of a 4B parameter model. Almost every complex architectural choice here—the ReAct loop, the heavy deterministic pre-processing, the strict guardrails—was built to compensate for that parameter ceiling.
+
+- **Anchoring categories to the user's existing board**. Instead of forcing an arbitrary taxonomy or letting the model invent its own tag system, I constrained it to categorize against the columns already present on the board. The model's classification space is strictly grounded in how the user already organizes their work.
+
+- **Committing to live writes instead of a staging diff.** I opted to let tools mutate AppStore directly and persist immediately. Staging diffs added UI friction and made the experience feel tentative. Live mutations make the agent's thought process visible in real time; if a run goes sideways, the mental model is simple: hit undo, don't review a complex diff.
+
+- **Capping interruptions at two questions.** It’s easy for an agent to get needy. Giving ask_user a hard budget of two questions per note prevents clarification fatigue. Once that allowance is spent, the tool explicitly forces the model to stop asking, make its best contextual guess, and move forward.
+
+- **Enforcing the 15-word project description gate.** The project description serves as the model’s semantic anchor. Letting users hit "Process" on an empty or terse project consistently yielded hallucinations and garbage columns. Requiring a 15-word minimum felt like a friction trade-off worth making to ensure the agent actually had enough context to succeed.
+
 
 ## Why the dates never go through the model
 
@@ -85,7 +94,7 @@ Independent of the model, a rules-driven pipeline segments the note into `Candid
 
 ## How we evaluated it
 
-**We did not build an automated evaluation, and there are no accuracy numbers in this repo.**
+**We did not build an automated evaluation, and there are no accuracy numbers.**
 
 What exists is 37 note fixtures under `Tickit/Tests/Fixtures/notes/` — clean bullets, messy 1-on-1s, WhatsApp fragments, punctuation chaos, a single-paragraph voice-dictation wall, a three-day Slack thread paste, three clients in one note — and `TickitTests/english_test_cases.json`, which catalogues ten of the English ones into a `baseline` and a `chaos` suite with difficulty labels and parity mappings to their Indonesian counterparts. The fixtures README carries a manual checklist with expected tick counts per case: TC-27 should yield 3 ticks, TC-34 should yield 15+ from the voice wall while skipping personal and networking chatter, TC-33 should yield 10+ from the Slack dump while skipping FYI lines.
 
@@ -95,7 +104,7 @@ So every claim about extraction quality in this project rests on four people pas
 
 ## Results
 
-**The architecture works, and we never measured how well.** There is no pass rate, no precision or recall on task extraction, no date-accuracy figure, no latency benchmark — those numbers don't exist in the repository.
+**The architecture works, and we never measured how well.** (as in no extensive test set, we only have unit testing) There is no pass rate, no precision or recall on task extraction, no date-accuracy figure, no latency benchmark.
 
 What is measurable, from the code and the commit history:
 
@@ -143,18 +152,9 @@ The claim we can't support is whether this beats pasting the note into a hosted 
 
 ## What I'd do differently
 
-Write the eval harness first, before any prompt tuning. `MockMLXRunner` and the 37 fixtures already sit where a harness would attach, and `english_test_cases.json` already declares expected tick counts per case. A script that runs all 37 fixtures through the real runner and diffs tick counts and titles against expectations would have been about a day's work at the start. It would also answer the question the project currently can't — whether the deterministic layer is worth 1,403 lines, which you can only know by turning it off and re-running.
-
-Fix the documentation drift, or delete the stale docs. The README describes an architecture that no longer exists — `AgentOrchestrator.swift`, `ReasoningAgent.swift`, `MemoryStore.swift`, a `Tools/` directory — while `ARCHITECTURE.md` describes the current one and says so explicitly. `ARCHITECTURE.md` has its own drift: it documents a WidgetKit extension and an App Group container that aren't in this repository.
-
-Run the comparison we skipped. One frontier-model baseline over the same 37 fixtures would tell us the real cost of the on-device constraint, in either direction.
-
-Reconsider whether the deterministic layer should be this large. It was built in response to real failures, so it isn't speculative, but it was built against a model that was current in June 2026. Measuring first, then deciding how much scaffolding the model needs, is the reverse of the order we used.
+Definitely to come in the project with a cleaner scope and vision for the project and now that I'm better at designing a workflow I'd delegate more task to the deterministic layer and agent just for simple reasoning, because this use case doesn't need an overly strict reasonning.
 
 ---
 
-**Repository:** [github.com/AIML-C1-NLP/tickit](https://github.com/AIML-C1-NLP/tickit)
-
-<!-- TODO: confirm the repo should be linked publicly — it's an org repo (AIML-C1-NLP), check whether it's public before shipping this link. -->
-<!-- TODO: the project ran 2026-06-02 to 2026-06-11 per git log; the date in frontmatter is the last commit. Change if you want the publication date instead. -->
-<!-- TODO: no screenshots referenced. The app has a kanban board, agenda view and Quick Capture panel — 2-3 screenshots would carry this article a long way. -->
+**Repository:** is private for now, contact me for more information
+<!-- [github.com/AIML-C1-NLP/tickit](https://github.com/AIML-C1-NLP/tickit) -->

@@ -14,20 +14,18 @@ We found a LOT of algorithms like 3D Gaussian Splatting, 3D GAN, 3D Diffusion, a
 
 ## Key learnings and technical outcomes
 
-- **Scope beats complex models**. Constraining inputs and edge cases solves more problems than adding heavier AI.
-- **Topology from skeletonisation**. Thinning walls to a 1px skeleton and counting pixel neighbors extracts endpoints, junctions, and bends via four simple convolutions—no dedicated corner detector needed.
-- **Edge extraction via multi-source BFS**. Seeding simultaneous flood fills from every corner recovers wall segments and geodesic lengths in a single pass.
-- **Fast on-device inference**. A 2,562-vertex mesh runs in ~109 ms on CPU (onnxruntime), proving real-time on-device iOS viability.
-- **Heavy preprocessing with openCV isn't that eacy to replicate on device.**
+- **Scoping down helps the plan**. rather than doing everything with one big model it's much more manageable to split the task into much smaller parts.
+- **Traditional CV still have it's place**. Thinning walls to a 1px skeleton and counting pixel neighbors extracts endpoints, junctions, and bends via four simple convolutions, no dedicated corner detector needed. Edge extraction via multi-source BFS: Seeding simultaneous flood fills from every corner recovers wall segments and geodesic lengths in a single pass.
+- **Heavy preprocessing with openCV is not eacy to replicate on device.** A flaw when designing the pipeline is that the app is much better as a python app than a swift app.
+- **3D Generation Techniques**, I learn a lot about 3D gaussian, why GAN is not the right tool here and how we ended up with graph CNN, in the end. Point is even in this subset we had to pick the right tool (model) for the right jobs.
 
 ## Key considerations and trade-offs
 
-- **Pixels, not metres.** Every coordinate in the output JSON is in croppedimage space. There is no scale inference so the AR app renders a floor plan with correct proportions and arbitrary absolute size.
+- **No ground truth.** I never built an annotated evaluation set, so there are no precision/recall numbers in this project. What I have instead is internal consistency measurement across the corpus, which is weaker. We're working with a really limited data.
 - **Classical for walls, learned for doors.** Walls are geometric and consistent enough for morphology. Door symbols are drawn conventions that vary by draughtsman, which is a recognition problem, so YOLO handles those.
-- **Single-storey, axis-agnostic.** The pipeline handles one plan image at a time. Multi-floor stacking, which the vendored `FloorplanToBlender3d` reference implementation does support, is out of scope here.
-- **A DAG, not a general graph.** The wall graph is converted to a directed acyclic graph via a DFS spanning forest for downstream traversal. This has a cost, covered in the Results section.
 - **Minimum 640×640 input**, below that, skeletonisation of scanned line work produces graphs that aren't worth returning.
-- **No ground truth.** I never built an annotated evaluation set, so there are no precision/recall numbers in this project. What I have instead is internal consistency measurement across the corpus, which is weaker.
+- **Transfer Learning and Model distillation**, to speed up training we tried training with multiple device linked with transfer learning, which works wonderfully but also have risk to disconnect, an interesting trade-off. We also tried distilling for both floorplan and 3D generation but the generated data is not checked for its quality because we didn't have enough time back then but I figure if we made sure the quality of the distilled data, the current model should be able to perform better.
+
 
 ## Why skeletonizing instead of segmenting
 
@@ -79,7 +77,7 @@ It's important to note that finding where the doors are and windows are a compli
 
 ### The furniture
 
-Now this is the interesting part, initially we wanted to use 3D gan for the room and furniture but after some thought, that's like impossible and unreliable, cause of model hallucination and such, SO we had to scrap that idea. The next idea is, what if we have a 3d cube or some other shape and then the model will autoregressively *deforms* them to a reference image. This is where I got the idea to test 2 model Atlas Net and pix2mesh, which we trained on PIX3D dataset, though there are better datasets. 
+Now this is the interesting part, initially we wanted to use 3D gan for the room and furniture but after some thought, that's impossible and unreliable, because of model hallucination and such, SO we had to scrap that idea. The next idea is, what if we have a 3d cube or some other shape and then the model will autoregressively *deforms* them to a reference image. This is where I got the idea to test 2 model Atlas Net and pix2mesh, which we trained on PIX3D dataset, though there are better datasets. 
 
 ![chairs](/projects/floorplan-to-ar/floorplan_chair2.png)
 
@@ -92,23 +90,24 @@ However a textureless model is kinda bland so we also tried a much newer and hea
 
 ### The iOS side
 
-The app (~3,300 lines of Swift) posts a JPEG to `/process-floorplan`, decodes the response into `Codable` DTOs, and builds a RealityKit entity graph:
+In the app user have to post a JPEG to `/process-floorplan`, decodes the response into `Codable` DTOs, and builds a RealityKit entity graph:
 `SemanticArchitectureBuilder` turns wall segments into geometry,
 `ProceduralGeometryBuilder` extrudes them, and `WallStylingManager` reacts to
 Combine publishers so material changes propagate without a scene rebuild.
 Openings become gaps in the extruded wall using exactly the `offset`/`width`
 values from the JSON.
 
-Furniture arrives two ways: bundled `.usdz` assets, and meshes generated from a photo. That second path is the Pixel2Mesh model with DINOv2 ViT-S/14 (frozen) with
-a 4-level FPN feeding three coarse-to-fine graph-convolution stages that deform an icosphere from 162 → 642 → 2,562 vertices. `Pix2MeshRunner.swift` runs it on-device through onnxruntime, unrolling the 2,562 indexed vertices into 15,360 per-face vertices with flat normals for RealityKit.
+Furniture arrives two ways: bundled `.usdz` assets, and meshes generated from a photo. That second path is the Pixel2Mesh model with DINOv2 ViT-S/14 (frozen) with a 4-level FPN feeding three coarse-to-fine graph-convolution stages that deform an icosphere from 162 → 642 → 2,562 vertices. `Pix2MeshRunner.swift` runs it on-device through onnxruntime, unrolling the 2,562 indexed vertices into 15,360 per-face vertices with flat normals for RealityKit.
 
 ## How the evaluation was done
 
 **There is no ground truth in this project, so there is no accuracy number anywhere in this article.** I never annotated a set of plans with correct wall graphs, so every "is this right?" judgement during development was me looking at an overlay image and deciding it looked right.
 
-What I could do without labels is measure the pipeline's *internal consistency* across the corpus — specifically, look for places where a later stage destroys information an earlier stage produced. That's a weaker claim than accuracy, but if stage N+1 emits less than stage N, that's a defect regardless of whether stage N was correct.
+What I could do without labels is measure the pipeline's *internal consistency* across the corpus. This is done specifically by looking for places where a later stage destroys information an earlier stage produced. That's a weaker claim than accuracy, but if stage N+1 emits less than stage N, that's a defect regardless of whether stage N was correct.
 
 So I ran all 90 plans through to the wall-graph stage, saved both the undirected graph (`walls_json/`) and the DAG (`walls_dag_json/`), and compared them edge for edge. The DAG export records `edges_dropped` and `is_dag` per plan, which let me cross-check my own differencing against the pipeline's self-report. Those two numbers agree on all 90 plans.
+
+As for the 3D model, the same story applies and we judge the result one by one manually.
 
 ## Results
 
@@ -134,8 +133,7 @@ The cause is straightforward. `_build_dag` builds a DFS spanning forest, and a s
 tree. The 4.8% figure is therefore approximately a count of independent cycles in the wall graph, and the plans that lose the most are the ones with the most enclosed rooms. `is_dag` is `True` for all 90 plans, so the code does exactly
 what it was written to do; it's the wrong thing to want.
 
-On the 3D side, the shipped chair model reached **epoch 22 of a configured 100** (`best.pt` records epoch 22, `last.pt` epoch 23). Training was stopped at roughly a quarter of the schedule, so the cosine annealing never completed and
-the model never saw its final low-LR phase. It has 41.4M parameters, of which the DINOv2 backbone is frozen. Exported to ONNX it runs in **109 ms on CPU** (mean of 10 runs, min 107, max 113) for the full three-stage forward pass to 2,562 vertices. It looks okay so there's that.
+On the 3D side, the shipped chair model reached **epoch 22 of a configured 100** (`best.pt` records epoch 22, `last.pt` epoch 23). It has 41.4M parameters, of which the DINOv2 backbone is frozen. Exported to ONNX it runs in **109 ms on CPU** (mean of 10 runs, min 107, max 113) for the full three-stage forward pass to 2,562 vertices. It looks okay so there's that.
 
 ## What didn't work
 
