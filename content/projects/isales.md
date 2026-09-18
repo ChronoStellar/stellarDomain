@@ -17,6 +17,10 @@ The question underneath that: is emotion in these architectures something you ca
 
 Concretely: four independent experiments across five repositories, each attacking emotion control at a different layer of the stack, plus one shipped iOS application that solved the problem from the opposite direction. Three of the four produced negative results. The fourth is unfinished. They failed for closely related reasons.
 
+<div class="video-embed">
+  <iframe src="https://drive.google.com/file/d/1h-CAFtwhTxbp5hYEwugIUtwLG161_1DJ/preview" allow="autoplay" allowfullscreen title="isales demo"></iframe>
+</div>
+
 ## Key learnings and technical outcomes
 
 - **Built a stand-in encoder that inverts a frozen vocoder.** Soprano's audio→token encoder was never released, so I trained a `SopranoEncoder` to satisfy `decoder(encoder(audio)) ≈ audio` against the frozen released decoder, using a multi-resolution STFT loss at three resolutions (512/128, 1024/256, 2048/512) in both linear and log domain. This produced 512-dim hidden states aligned to real recordings without the missing tokenizer.

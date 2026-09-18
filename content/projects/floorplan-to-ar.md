@@ -12,6 +12,10 @@ Right so, truthfully not really a problem but one day my team and I got curious 
 
 We found a LOT of algorithms like 3D Gaussian Splatting, 3D GAN, 3D Diffusion, and so on so we just want to learn that basically.
 
+<div class="video-embed">
+  <iframe src="https://drive.google.com/file/d/13fnN3aX5wMY-NzqvzaatzIZzmLa7yMOb/preview" allow="autoplay" allowfullscreen title="floorplan demo"></iframe>
+</div>
+
 ## Key learnings and technical outcomes
 
 - **Scoping down helps the plan**. rather than doing everything with one big model it's much more manageable to split the task into much smaller parts.

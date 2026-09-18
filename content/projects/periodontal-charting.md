@@ -2,38 +2,42 @@
 title: "Periodontal Charting by Voice"
 slug: periodontal-charting
 date: 2026-08-21
-summary: "An offline iPad app that turns Indonesian clinical dictation into a WHO-standard periodontal chart, with target speaker extraction, STT, and a custom parser"
+summary: "An IPad app to help periodontist that turns Indonesian clinical dictation into a WHO-standard periodontal chart, with target speaker extraction, STT, and a custom text to chart parser"
 tags: ["SwiftUI", "CoreML", "STT", "NLP", "on-device", "3D", "Speech"]
 coverImage: /projects/periodontal-charting/periodontal_hero.png
 ---
 
 ## The problem
 
-Periodontal charting is a two-person job for no good reason. A clinician holds a probe in one hand and a mirror in the other, reads off three to six numbers per tooth site, and an assistant types them in. Thirty-two teeth, six sites each, several metrics per site — the dictation is fast, repetitive, and the assistant is a transcription bottleneck who is also a second salary. Everyone involved knows the numbers are occasionally wrong and nobody can tell you which ones.
+A simple background first this work was done while consulting with an actualy periodontist. Periodontology itself is a subset of dentistry that focuses on the tissues surrounding the teeth, those being gums and jawbone.
 
-The obvious fix is speech-to-text, and the obvious speech-to-text is Whisper. I started there and it was the wrong tool: clinical dictation is not natural language. `"gigi 16 tiga empat lima tiga empat tiga"` is a command with a grammar, spoken by someone who is not looking at the screen, in Indonesian, in a room with a compressor running. A general model trained to produce fluent text will produce fluent text, which is the failure mode here. It hallucinates plausible sentences where I need it to either emit a valid clinical token or emit nothing.
+Periodontal charting is a two-person job for no good reason. A clinician holds a probe in one hand and a mirror in the other, reads off three to six numbers per tooth site, and an assistant types them in. Thirty-two teeth, six sites each, several metrics per site. The dictation is fast, repetitive, and the assistant is a transcription bottleneck who is also a second salary. Everyone involved knows the numbers are occasionally wrong and nobody can tell you which ones.
 
-The question underneath: can a small constrained model plus a lot of domain structure beat a big general model on a narrow task? The vocabulary here is about 700 words — a constraint I could exploit and Whisper structurally cannot. The second thing I wanted, and got much less of, was to see whether target-speaker extraction could solve the assistant-voice problem, since a clinic has two people talking and only one of them is dictating.
+The fix is speech-to-text and the challenge is that clinical dictation isn't natural language. `"gigi 16 tiga empat lima tiga empat tiga"` is a command with a grammar, spoken by someone who is not looking at the screen, in Indonesian, in a room with a compressor running.
+
+So our problem is clear, how can we simplify the charting process.
+
+<div class="video-embed">
+  <iframe src="https://drive.google.com/file/d/1bfW-7HlB9VBxW9HCnHxY3AQusFa9zI9p/preview" allow="autoplay" allowfullscreen title="periodontal demo"></iframe>
+</div>
 
 What it is: an iPad SwiftUI app that renders a full 32-tooth WHO-standard chart and fills it in from live Indonesian voice dictation, entirely offline. A 602 MB Wav2Vec2 Indonesian model runs on-device via Core ML, feeding a CTC beam search constrained by a 714-word prefix trie, into a stateful parser that turns token sequences into chart mutations. In front of that sits a speaker gate and a BSRNN target-speech extractor meant to keep the assistant's voice out of the chart.
 
 ## Key learnings and technical outcomes
 
-- **A lexicon-constrained decoder beat Whisper by roughly 2.5x on the same two clips.** Wav2Vec2 with the trie scored 12.54% and 15.32% WER where the Whisper streaming benchmark scored 34.95% and 27.59% — though the two were not scored by identical normalizers, which I unpack in the evaluation section.
-- **The parser is exact on clean text.** Fed the human-corrected transcripts, both test charts come back with **0 field mismatches** out of 194 comparable fields. Every remaining end-to-end error is an acoustic error, not a grammar error.
-- **Steering a CTC beam with domain knowledge is cheap and effective.** A word-completion log-prob bonus for anatomy terms, plus relaxing the character prune threshold so those branches survive long enough to receive it, broke a plateau I had assumed required fine-tuning.
-- **One dropped word can cost 60+ chart fields.** The parser is a state machine with a persistent active-metric cursor, so a missed metric keyword doesn't produce one error — it silently misroutes every subsequent value until the next keyword.
-- **Offline evaluation harnesses have to replicate the front end exactly.** My regression script skipped the high-pass filter and auto-gain the live app applies. Fixing that one discrepancy moved mismatches from 91 to 49 with no model change whatsoever.
-- **CPU-only beat CPU+ANE for the separator.** 12.40 ms/block vs 14.95 ms/block on A16 — the Neural Engine doesn't accelerate the reshape-heavy operations that dominate a BSRNN forward pass.
+- **Tons of post processing won't help with the base problem**, before the pivot to other architecture we used whisper large v3 turbo, which works just fine mind you outside of a glaring issue that is the load time, well and also the tendency to hallucinate `mesio` to `mesiu` or the likes of it but it's not an exclusively whisper issue. At first I used a lot of alignment, regex, levehstein and other things too but the main issue is still there and I couldn't get the model size smaller.
+- **Simple problem require only limited vocabulary**, as whisper is a LLM bsed transcription model, it's trained on more data than what I need, to the point that it'll make up phrases such as `thank you` or `subscribe` to pad out silences, not to mention that whisper requires 30s input window. You might imagine that this pipeline can only get heavier and heavier.
+- **I Learned Blender scripting with python**, a bit out of the topic of AI but I designed the 3D model reconstruction using publicly available assets and used blender to find the cej points in the 3D model to set the gums there.
+- **Optimizing the performance of a model as much as possible**, since we wanted everything to stay on device I had to look at options to quantize or compile model to a smaller version and that also include checking over the pipelines my friend made to make sure that nothing bloats and the memory of the app stays in the threshold.
+- **Domain knowledge does not cover complicated process**, we designed the app specifically for periodontist but even then we couldn't cover every variation a person could come up with. Hence really a simplified flow will yield better result and easier flow, I still need to learn to balance those
 
 ## Key considerations and trade-offs
 
 - **Indonesian only, clinical vocabulary only.** The trie makes out-of-lexicon words literally undecodable. This is the source of the accuracy win and also means the system cannot transcribe a clinician's aside.
 - **Fully offline, which costs 602 MB of app bundle.** Patient audio never leaves the device. In a medical context I was not willing to trade that for a smaller download or a better cloud model.
-- **A 40-wide beam over a ~700-word trie, on-device.** Beam width 10 was too narrow to recover anatomy terms; 50 hallucinated. 40 is an empirical middle, not a principled one.
 - **Deterministic replay over mutable chart state.** The chart is rebuilt by replaying an append-only command log on every change, so re-parsing the same transcript always yields the same chart. This made regression testing tractable and cost some live-update efficiency.
 - **The evaluation ignores six high-frequency filler words** (`gigi`, `ada`, `pada`, `ke`, `di`, `bagian`). They carry no clinical value, but dropping them removes 3.7% of the reference words on one clip and 12.9% on the other, which flatters the WER.
-- **Two test speakers.** Everything below rests on two recordings, one dentist and one student — not a sample size that supports much.
+- **Limited Data to work with**, we couldn't train with the data we got so most of the process here are from model engineering.
 
 ## Constraining the decoder instead of fine-tuning the model
 

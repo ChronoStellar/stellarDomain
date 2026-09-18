@@ -16,7 +16,7 @@ To make sure that never happens we took a few consideration when designing this 
   <iframe src="https://drive.google.com/file/d/15dDMzoO4VK-73JbZ1Zxz9rTZssQ__DGe/preview" allow="autoplay" allowfullscreen title="tickit demo"></iframe>
 </div>
 
-Tickit is a macOS app. You paste a note into a project, hit Process, and an agent running a 4-bit Gemma 4 E4B locally reads the note block by block and writes tasks — "ticks" — straight onto a kanban board, grouped into columns it either reuses or creates. Dated ticks show up in a deadline-sorted agenda. A global hotkey (⌥N) opens a floating capture bar from anywhere. It was built by four of us over ten days.
+Tickit is a macOS app. You paste a note into a project, hit Process, and an agent running a 4-bit Gemma 4 E4B locally reads the note block by block and writes tasks "ticks" straight onto a kanban board, grouped into columns it either reuses or creates. Dated ticks show up in a deadline-sorted agenda. A global hotkey (⌥N) opens a floating capture bar from anywhere. It was built by four of us over ten days.
 
 ## Key learnings and technical outcomes
 
