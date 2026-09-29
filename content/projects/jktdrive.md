@@ -1,6 +1,6 @@
 ---
 title: "JKTDrive: Benchmarking VLMs on Jakarta Traffic"
-date: "2024-07-15"
+date: "2025-07-15"
 tags: ["Autonomous Driving", "VLM", "Benchmark"]
 summary: "Most driving benchmarks assume orderly, Western roads. JKTDrive tests whether vision-language models can reason about Jakarta traffic and finds the gap between commercial and open-source models is far smaller than expected."
 pinned: false

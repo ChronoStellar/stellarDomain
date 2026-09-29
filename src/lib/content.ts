@@ -31,6 +31,20 @@ export interface PublicationMetadata {
   slug: string;
 }
 
+export interface LabProjectMetadata {
+  title: string;
+  date: string;
+  tags: string[];
+  summary: string;
+  slug: string;
+  status?: string; // 'Prototype' | 'Exploration' | 'Proof of Concept' | 'WIP' | 'Archived' | string
+  highlight?: string;
+  coverImage?: string;
+  pinned?: boolean;
+  github?: string;
+  demo?: string;
+}
+
 export interface ProfileData {
   name: string;
   tagline: string;
@@ -79,7 +93,9 @@ async function renderMarkdown(markdown: string): Promise<string> {
  */
 function rewriteHtmlAssetPaths(html: string): string {
   if (!BASE_PATH) return html;
-  return html.replace(/(<img\b[^>]*?\bsrc=")(\/[^"]*)(")/g, (_m, a, url, c) => `${a}${withBasePath(url)}${c}`);
+  return html
+    .replace(/(<img\b[^>]*?\bsrc=")(\/[^"]*)(")/g, (_m, a, url, c) => `${a}${withBasePath(url)}${c}`)
+    .replace(/(<a\b[^>]*?\bhref=")(\/[^"]*)(")/g, (_m, a, url, c) => `${a}${withBasePath(url)}${c}`);
 }
 
 export function getProfileData(): ProfileData {
@@ -195,6 +211,56 @@ export async function getPublicationBySlug(slug: string) {
     slug,
     contentHtml,
     ...(matterResult.data as Omit<PublicationMetadata, 'slug'>),
+  };
+}
+
+export function getAllLabProjects(): LabProjectMetadata[] {
+  const labDir = path.join(contentDirectory, 'lab');
+  if (!fs.existsSync(labDir)) return [];
+
+  const fileNames = fs.readdirSync(labDir);
+  const allLabData = fileNames
+    .filter(fileName => fileName.endsWith('.md'))
+    .map(fileName => {
+      const slug = fileName.replace(/\.md$/, '');
+      const fullPath = path.join(labDir, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+
+      const matterResult = matter(fileContents);
+
+      return {
+        slug,
+        ...(matterResult.data as Omit<LabProjectMetadata, 'slug'>),
+      };
+    });
+
+  // Sort by pinned status, then by date descending
+  return allLabData.sort((a, b) => {
+    const aPinned = a.pinned || false;
+    const bPinned = b.pinned || false;
+
+    if (aPinned !== bPinned) {
+      return aPinned ? -1 : 1;
+    }
+
+    if (a.date < b.date) return 1;
+    if (a.date > b.date) return -1;
+    return 0;
+  });
+}
+
+export async function getLabProjectBySlug(slug: string) {
+  const fullPath = path.join(contentDirectory, 'lab', `${slug}.md`);
+  const fileContents = fs.readFileSync(fullPath, 'utf8');
+
+  const matterResult = matter(fileContents);
+  const processedContent = await renderMarkdown(matterResult.content);
+  const contentHtml = processedContent;
+
+  return {
+    slug,
+    contentHtml,
+    ...(matterResult.data as Omit<LabProjectMetadata, 'slug'>),
   };
 }
 

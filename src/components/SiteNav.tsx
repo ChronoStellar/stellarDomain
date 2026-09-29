@@ -9,6 +9,7 @@ type NavLink = { href: string; label: string };
 
 const DEFAULT_LINKS: NavLink[] = [
   { href: '/#work', label: 'Work' },
+  { href: '/lab', label: 'Lab' },
   { href: '/#publications', label: 'Publications' },
   { href: '/#about', label: 'About' },
   { href: '/#contact', label: 'Contact' },
