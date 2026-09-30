@@ -1480,9 +1480,21 @@ button:focus-visible,
    Space Swimmer (Lo-Fi Retro Pixel Astronauts in Background)
    ========================================================================== */
 
+/* Whole page wrapper for The Lab, binding full-document height background elements */
+.lab-page-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: clip; /* Clip horizontal overflow of off-screen swimmers without breaking page scroll */
+}
+
 .space-swimmer-bg {
-  position: fixed;
-  inset: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -1502,12 +1514,19 @@ button:focus-visible,
 
 .custom-astro-lane {
   position: absolute;
-  top: var(--spawn-y, 16vh);
-  left: -200px;
+  top: var(--spawn-y, 200px);
+  left: -240px;
   pointer-events: none;
   user-select: none;
-  animation: bb-traverse 54s infinite linear;
   transition: z-index 0.2s ease, opacity 0.2s ease;
+}
+
+.custom-astro-lane.swim-ltr {
+  animation: bb-traverse-ltr var(--duration, 48s) linear forwards;
+}
+
+.custom-astro-lane.swim-rtl {
+  animation: bb-traverse-rtl var(--duration, 48s) linear forwards;
 }
 
 .custom-astro-lane.is-speaking {
@@ -1515,22 +1534,22 @@ button:focus-visible,
   opacity: 1 !important;
 }
 
-/* Lane traverses strictly horizontally — no transform so speech bubble remains upright */
-@keyframes bb-traverse {
+/* Single-pass horizontal traversals bound to full page width */
+@keyframes bb-traverse-ltr {
   0% {
-    left: -200px;
-  }
-  48% {
-    left: calc(100vw + 60px);
-  }
-  50% {
-    left: calc(100vw + 60px);
-  }
-  98% {
-    left: -200px;
+    left: -220px;
   }
   100% {
-    left: -200px;
+    left: calc(100% + 60px);
+  }
+}
+
+@keyframes bb-traverse-rtl {
+  0% {
+    left: calc(100% + 60px);
+  }
+  100% {
+    left: -220px;
   }
 }
 
@@ -1539,22 +1558,14 @@ button:focus-visible,
   position: relative;
   width: 140px;
   height: 140px;
-  animation: bb-sprite-orient 54s infinite linear;
 }
 
-@keyframes bb-sprite-orient {
-  /* Pass 1: Swimming Left to Right (facing right) */
-  0%, 48% {
-    transform: scaleX(-1) rotate(22deg);
-  }
-  /* Turnaround off-screen: flip to face left */
-  49%, 98% {
-    transform: scaleX(1) rotate(-22deg);
-  }
-  /* Reset off-screen to face right */
-  99%, 100% {
-    transform: scaleX(-1) rotate(22deg);
-  }
+.custom-astro-swimmer.orient-ltr {
+  transform: scaleX(-1) rotate(22deg);
+}
+
+.custom-astro-swimmer.orient-rtl {
+  transform: scaleX(1) rotate(-22deg);
 }
 
 .custom-astro-btn {
@@ -1694,48 +1705,49 @@ button:focus-visible,
   pointer-events: auto;
 }
 
-/* Primary Swimmer Lane (Upper space, breaststroke) */
+/* ==========================================================================
+   Background Retro Pixel Swimmers (Rare Single-Pass Floaters)
+   ========================================================================== */
+
 .pixel-astronaut-lane {
   position: absolute;
+  top: var(--spawn-y, 400px);
   pointer-events: none;
   user-select: none;
 }
 
-.lane-primary {
-  top: var(--spawn-y, 18vh);
-  left: -90px;
-  animation: pixel-traverse-primary 46s infinite linear;
+.pixel-astronaut-lane.swim-ltr {
+  animation: pixel-traverse-ltr var(--duration, 52s) linear forwards;
 }
 
-@keyframes pixel-traverse-primary {
+.pixel-astronaut-lane.swim-rtl {
+  animation: pixel-traverse-rtl var(--duration, 52s) linear forwards;
+}
+
+@keyframes pixel-traverse-ltr {
   0% {
-    left: -90px;
-    transform: scaleX(1);
-  }
-  48% {
-    left: calc(100vw + 40px);
-    transform: scaleX(1);
-  }
-  49% {
-    left: calc(100vw + 40px);
-    transform: scaleX(-1);
-  }
-  50% {
-    left: calc(100vw + 40px);
-    transform: scaleX(-1);
-  }
-  98% {
-    left: -90px;
-    transform: scaleX(-1);
-  }
-  99% {
-    left: -90px;
-    transform: scaleX(1);
+    left: -120px;
   }
   100% {
-    left: -90px;
-    transform: scaleX(1);
+    left: calc(100% + 50px);
   }
+}
+
+@keyframes pixel-traverse-rtl {
+  0% {
+    left: calc(100% + 50px);
+  }
+  100% {
+    left: -120px;
+  }
+}
+
+.pixel-orient-ltr {
+  transform: scaleX(1);
+}
+
+.pixel-orient-rtl {
+  transform: scaleX(-1);
 }
 
 .pixel-astro-svg {
@@ -1784,41 +1796,15 @@ button:focus-visible,
 
 /* Secondary Lane (Distant companion with space rubber ducky — peaceful zero-G float) */
 .lane-secondary {
-  top: var(--spawn-y, 52vh);
-  right: -90px;
   opacity: 0.6;
-  animation: pixel-traverse-secondary 64s infinite linear 6s;
 }
 
-@keyframes pixel-traverse-secondary {
-  0% {
-    right: -90px;
-    transform: scaleX(1);
-  }
-  48% {
-    right: calc(100vw + 40px);
-    transform: scaleX(1);
-  }
-  49% {
-    right: calc(100vw + 40px);
-    transform: scaleX(-1);
-  }
-  50% {
-    right: calc(100vw + 40px);
-    transform: scaleX(-1);
-  }
-  98% {
-    right: -90px;
-    transform: scaleX(-1);
-  }
-  99% {
-    right: -90px;
-    transform: scaleX(1);
-  }
-  100% {
-    right: -90px;
-    transform: scaleX(1);
-  }
+.floater-orient-ltr {
+  transform: scaleX(-1);
+}
+
+.floater-orient-rtl {
+  transform: scaleX(1);
 }
 
 .pixel-astro-svg-small {
@@ -1837,9 +1823,6 @@ button:focus-visible,
     width: 95px;
     height: 95px;
   }
-  .custom-astro-lane {
-    top: 10vh;
-  }
   .pixel-astro-svg {
     width: 50px;
     height: 42px;
@@ -1848,54 +1831,13 @@ button:focus-visible,
     width: 40px;
     height: 24px;
   }
-  .lane-primary {
-    top: 24vh;
-  }
-  .lane-secondary {
-    top: 50vh;
-  }
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .custom-astro-lane {
-    animation: none;
-    left: 80%;
-    top: 14vh;
-  }
-  .custom-astro-swimmer {
-    animation: none;
-    transform: scaleX(-1) rotate(22deg);
-  }
-  .frame-stroke,
-  .frame-glide {
-    animation: none !important;
-  }
-  .frame-stroke {
-    opacity: 0 !important;
-    visibility: hidden !important;
-  }
-  .frame-glide {
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-  .lane-primary {
-    animation: none;
-    left: 10%;
-    top: 18vh;
-  }
-  .lane-secondary {
-    animation: none;
-    right: 15%;
-    top: 48vh;
-  }
-  .pixel-astro-svg,
-  .pixel-arm-top,
-  .pixel-arm-bottom,
-  .pixel-legs,
-  .pixel-bubble-stream,
-  .pixel-astro-svg-small,
-  .pixel-ducky-companion {
+  .custom-astro-lane,
+  .pixel-astronaut-lane {
+    display: none !important;
     animation: none !important;
   }
 }

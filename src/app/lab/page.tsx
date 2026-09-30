@@ -15,7 +15,7 @@ export default function LabPage() {
   const labProjects = getAllLabProjects();
 
   return (
-    <>
+    <div className="lab-page-wrapper">
       <ThreeBackground />
       <SpaceSwimmer />
       <SiteNav backHref="/" backLabel="Back to home" />
@@ -47,6 +47,6 @@ export default function LabPage() {
 
         <LabSection items={labProjects} />
       </main>
-    </>
+    </div>
   );
 }
