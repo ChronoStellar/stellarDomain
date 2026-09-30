@@ -1475,3 +1475,314 @@ button:focus-visible,
   color: var(--bg);
   opacity: 0.85;
 }
+
+/* ==========================================================================
+   Space Swimmer (Lo-Fi Retro Pixel Astronauts in Background)
+   ========================================================================== */
+
+.space-swimmer-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0; /* Strictly behind all page content and cards */
+  overflow: hidden;
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+}
+
+[data-theme='dark'] .space-swimmer-bg {
+  opacity: 0.72;
+}
+
+/* ==========================================================================
+   BB: Custom Astronaut Swimmer
+   ========================================================================== */
+
+.custom-astro-lane {
+  position: absolute;
+  top: var(--spawn-y, 16vh);
+  left: -200px;
+  pointer-events: none;
+  user-select: none;
+  animation: bb-traverse 54s infinite linear;
+}
+
+/* Calm, steady traversal across space — mirrored properly for left & right passes, zero vertical drift */
+@keyframes bb-traverse {
+  /* --- Pass 1: Swimming Left to Right (facing right) --- */
+  0% {
+    left: -200px;
+    transform: scaleX(-1) rotate(22deg);
+  }
+  48% {
+    left: calc(100vw + 60px);
+    transform: scaleX(-1) rotate(22deg);
+  }
+
+  /* --- Turnaround off-screen (flip to face left) --- */
+  49% {
+    left: calc(100vw + 60px);
+    transform: scaleX(1) rotate(-22deg);
+  }
+
+  /* --- Pass 2: Swimming Right to Left (facing left) --- */
+  50% {
+    left: calc(100vw + 60px);
+    transform: scaleX(1) rotate(-22deg);
+  }
+  98% {
+    left: -200px;
+    transform: scaleX(1) rotate(-22deg);
+  }
+
+  /* --- Reset off-screen to face right for next lap --- */
+  99% {
+    left: -200px;
+    transform: scaleX(-1) rotate(22deg);
+  }
+  100% {
+    left: -200px;
+    transform: scaleX(-1) rotate(22deg);
+  }
+}
+
+.custom-astro-swimmer {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.custom-astro-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 0 16px oklch(75% 0.14 220 / 0.4));
+}
+
+.frame-stroke {
+  animation: bb-frame-stroke 3.4s infinite steps(1);
+}
+
+.frame-glide {
+  animation: bb-frame-glide 3.4s infinite steps(1);
+}
+
+/* 0% - 34%: Power stroke & kick. 35% - 100%: Serene streamlined glide */
+@keyframes bb-frame-stroke {
+  0%, 34% { opacity: 1; visibility: visible; }
+  35%, 100% { opacity: 0; visibility: hidden; }
+}
+
+@keyframes bb-frame-glide {
+  0%, 34% { opacity: 0; visibility: hidden; }
+  35%, 100% { opacity: 1; visibility: visible; }
+}
+
+/* Primary Swimmer Lane (Upper space, breaststroke) */
+.pixel-astronaut-lane {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+
+.lane-primary {
+  top: var(--spawn-y, 18vh);
+  left: -90px;
+  animation: pixel-traverse-primary 46s infinite linear;
+}
+
+@keyframes pixel-traverse-primary {
+  0% {
+    left: -90px;
+    transform: scaleX(1);
+  }
+  48% {
+    left: calc(100vw + 40px);
+    transform: scaleX(1);
+  }
+  49% {
+    left: calc(100vw + 40px);
+    transform: scaleX(-1);
+  }
+  50% {
+    left: calc(100vw + 40px);
+    transform: scaleX(-1);
+  }
+  98% {
+    left: -90px;
+    transform: scaleX(-1);
+  }
+  99% {
+    left: -90px;
+    transform: scaleX(1);
+  }
+  100% {
+    left: -90px;
+    transform: scaleX(1);
+  }
+}
+
+.pixel-astro-svg {
+  width: 72px;
+  height: 60px;
+  display: block;
+}
+
+/* 8-bit swimming stroke steps — purely horizontal limb motions */
+.pixel-arm-top {
+  animation: pixel-stroke-top 1.6s infinite steps(2);
+}
+
+@keyframes pixel-stroke-top {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-2px); }
+}
+
+.pixel-arm-bottom {
+  animation: pixel-stroke-bottom 1.6s infinite steps(2);
+}
+
+@keyframes pixel-stroke-bottom {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(1px); }
+}
+
+.pixel-legs {
+  animation: pixel-kick 0.8s infinite steps(2);
+}
+
+@keyframes pixel-kick {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-1px); }
+}
+
+.pixel-bubble-stream {
+  animation: pixel-bubbles 1.4s infinite steps(3);
+}
+
+@keyframes pixel-bubbles {
+  0% { opacity: 0; transform: translateX(0); }
+  40% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateX(-6px); }
+}
+
+/* Secondary Lane (Distant companion with space rubber ducky — peaceful zero-G float) */
+.lane-secondary {
+  top: var(--spawn-y, 52vh);
+  right: -90px;
+  opacity: 0.6;
+  animation: pixel-traverse-secondary 64s infinite linear 6s;
+}
+
+@keyframes pixel-traverse-secondary {
+  0% {
+    right: -90px;
+    transform: scaleX(1);
+  }
+  48% {
+    right: calc(100vw + 40px);
+    transform: scaleX(1);
+  }
+  49% {
+    right: calc(100vw + 40px);
+    transform: scaleX(-1);
+  }
+  50% {
+    right: calc(100vw + 40px);
+    transform: scaleX(-1);
+  }
+  98% {
+    right: -90px;
+    transform: scaleX(-1);
+  }
+  99% {
+    right: -90px;
+    transform: scaleX(1);
+  }
+  100% {
+    right: -90px;
+    transform: scaleX(1);
+  }
+}
+
+.pixel-astro-svg-small {
+  width: 56px;
+  height: 32px;
+  display: block;
+}
+
+.pixel-ducky-companion {
+  display: block;
+}
+
+/* Mobile responsive scaling */
+@media (max-width: 640px) {
+  .custom-astro-swimmer {
+    width: 95px;
+    height: 95px;
+  }
+  .custom-astro-lane {
+    top: 10vh;
+  }
+  .pixel-astro-svg {
+    width: 50px;
+    height: 42px;
+  }
+  .pixel-astro-svg-small {
+    width: 40px;
+    height: 24px;
+  }
+  .lane-primary {
+    top: 24vh;
+  }
+  .lane-secondary {
+    top: 50vh;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .custom-astro-lane {
+    animation: none;
+    left: 80%;
+    top: 14vh;
+    transform: scaleX(-1) rotate(22deg);
+  }
+  .custom-astro-swimmer,
+  .frame-stroke,
+  .frame-glide {
+    animation: none !important;
+  }
+  .frame-stroke {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+  .frame-glide {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .lane-primary {
+    animation: none;
+    left: 10%;
+    top: 18vh;
+  }
+  .lane-secondary {
+    animation: none;
+    right: 15%;
+    top: 48vh;
+  }
+  .pixel-astro-svg,
+  .pixel-arm-top,
+  .pixel-arm-bottom,
+  .pixel-legs,
+  .pixel-bubble-stream,
+  .pixel-astro-svg-small,
+  .pixel-ducky-companion {
+    animation: none !important;
+  }
+}

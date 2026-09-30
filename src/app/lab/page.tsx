@@ -2,6 +2,7 @@ import { getAllLabProjects } from '@/lib/content';
 import ThreeBackground from '@/components/ThreeBackground';
 import SiteNav from '@/components/SiteNav';
 import LabSection from '@/components/LabSection';
+import SpaceSwimmer from '@/components/SpaceSwimmer';
 import Link from 'next/link';
 
 export const metadata = {
@@ -16,6 +17,7 @@ export default function LabPage() {
   return (
     <>
       <ThreeBackground />
+      <SpaceSwimmer />
       <SiteNav backHref="/" backLabel="Back to home" />
 
       <main id="main" style={{ position: 'relative', zIndex: 1, flexGrow: 1 }}>
