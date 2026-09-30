@@ -1,24 +1,47 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { withBasePath } from '@/lib/basePath';
 
 const getRandomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 
+const BB_QUOTES = [
+  "Hey! I'm swimming here! 🫧",
+  "0G is no excuse for poking!",
+  "BB to ground control: visitor detected in Sector Lab! 📡",
+  "Warning: cosmic tickle shields offline! ⚡",
+  "Bloop bloop... looking for space snacks 🍙",
+  "✨ *streamlined cat-astronaut glide* ✨",
+  "Don't tap the glass, you'll scare the space duck! 🦆",
+  "Systems nominal! Proceed with research!",
+  "0% gravity, 100% aerodynamic.",
+  "Need a rubber duck to debug your code? Check behind me!",
+  "Brrr... deep space is cold, keep swimming! 🚀",
+];
+
 /**
  * Ambient space swimmers in the background of The Lab:
- * 1. The custom hand-drawn swimming astronaut (2-frame animated swim stroke & glide)
+ * 1. BB: The custom swimming astronaut (2-frame animated swim stroke & glide)
+ *    - Easter egg: Click BB rapidly in quick succession to hear her talk!
  * 2. Background retro pixel swimmers & rubber ducky floating in the deep starfield
  *
  * Spawn height is randomized on page load and dynamically re-randomized each time
  * an astronaut completes a lap off-screen.
- * Strictly in the background (z-index: 0, behind all cards and text), with gentle ambient opacity.
+ * Strictly in the background (z-index: 1, behind all cards and text), with gentle ambient opacity.
  */
 export default function SpaceSwimmer() {
   const customLaneRef = useRef<HTMLDivElement>(null);
   const primaryLaneRef = useRef<HTMLDivElement>(null);
   const secondaryLaneRef = useRef<HTMLDivElement>(null);
+
+  const [speech, setSpeech] = useState<string | null>(null);
+  const [isPoked, setIsPoked] = useState(false);
+  const clickCountRef = useRef(0);
+  const lastClickTimeRef = useRef(0);
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dismissTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pokeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Randomize initial heights on mount directly on DOM to prevent React re-renders
   useEffect(() => {
@@ -52,16 +75,95 @@ export default function SpaceSwimmer() {
     }
   }, []);
 
+  // Rapid click / poke handler for BB
+  const handleBbClick = useCallback(
+    (e: React.MouseEvent | React.KeyboardEvent) => {
+      e.stopPropagation();
+      const now = Date.now();
+      const timeSinceLast = now - lastClickTimeRef.current;
+      lastClickTimeRef.current = now;
+
+      if (resetTimerRef.current) {
+        clearTimeout(resetTimerRef.current);
+      }
+
+      // Count clicks that happen within 550ms of each other
+      if (timeSinceLast < 550) {
+        clickCountRef.current += 1;
+      } else {
+        clickCountRef.current = 1;
+      }
+
+      // Reset counter after 750ms of idle
+      resetTimerRef.current = setTimeout(() => {
+        clickCountRef.current = 0;
+      }, 750);
+
+      // Visual poke feedback on every click
+      setIsPoked(true);
+      if (pokeTimerRef.current) clearTimeout(pokeTimerRef.current);
+      pokeTimerRef.current = setTimeout(() => {
+        setIsPoked(false);
+      }, 260);
+
+      // Trigger speech on 3 quick clicks (or immediately if already speaking)
+      if (clickCountRef.current >= 3 || speech !== null) {
+        setSpeech((prev) => {
+          const pool = BB_QUOTES.filter((q) => q !== prev);
+          return pool[Math.floor(Math.random() * pool.length)] || BB_QUOTES[0];
+        });
+
+        if (dismissTimerRef.current) {
+          clearTimeout(dismissTimerRef.current);
+        }
+        dismissTimerRef.current = setTimeout(() => {
+          setSpeech(null);
+          clickCountRef.current = 0;
+        }, 4200);
+      }
+    },
+    [speech]
+  );
+
+  // Clean up all timers on unmount
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+      if (pokeTimerRef.current) clearTimeout(pokeTimerRef.current);
+    };
+  }, []);
+
   return (
-    <div className="space-swimmer-bg" aria-hidden="true">
-      {/* BB: Custom Illustrated Astronaut Swimmer */}
+    <div className="space-swimmer-bg">
+      {/* BB: Custom Pixelated Astronaut Swimmer */}
       <div
         ref={customLaneRef}
-        className="custom-astro-lane"
+        className={`custom-astro-lane ${speech ? 'is-speaking' : ''}`}
         aria-label="BB the astronaut swimming in space"
         onAnimationIteration={onCustomLap}
       >
-        <div className="custom-astro-swimmer">
+        {/* Retro Pixel Speech Bubble (renders upright above BB) */}
+        {speech && (
+          <div className="bb-speech-bubble" role="status" aria-live="polite">
+            <span className="bb-speech-author">BB:</span>
+            <span className="bb-speech-text">{speech}</span>
+            <div className="bb-speech-arrow" aria-hidden="true" />
+          </div>
+        )}
+
+        <button
+          type="button"
+          className={`custom-astro-swimmer custom-astro-btn ${isPoked ? 'bb-poked' : ''}`}
+          onClick={handleBbClick}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              handleBbClick(e);
+            }
+          }}
+          title="Click BB repeatedly in quick succession!"
+          aria-label="BB the astronaut swimmer. Click rapidly to talk."
+        >
           {/* Frame 1: Swimming stroke & kick */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -78,7 +180,7 @@ export default function SpaceSwimmer() {
             className="custom-astro-frame frame-glide"
             decoding="async"
           />
-        </div>
+        </button>
       </div>
 
       {/* Retro Pixel Swimmer 1: 8-bit Astronaut with snorkel and pool floaties */}

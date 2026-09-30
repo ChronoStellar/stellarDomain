@@ -20,7 +20,7 @@ export default function LabPage() {
       <SpaceSwimmer />
       <SiteNav backHref="/" backLabel="Back to home" />
 
-      <main id="main" style={{ position: 'relative', zIndex: 1, flexGrow: 1 }}>
+      <main id="main" className="lab-page-main" style={{ position: 'relative', zIndex: 2, flexGrow: 1 }}>
         <header className="container lab-hero">
           <div className="text-mono lab-hero-badge">
             <span className="lab-badge-pulse" aria-hidden="true" />

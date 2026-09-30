@@ -1486,14 +1486,14 @@ button:focus-visible,
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 0; /* Strictly behind all page content and cards */
+  z-index: 1; /* In front of Three.js canvas (0), behind page cards (2) */
   overflow: hidden;
-  opacity: 0.55;
+  opacity: 0.65;
   transition: opacity 0.3s ease;
 }
 
 [data-theme='dark'] .space-swimmer-bg {
-  opacity: 0.72;
+  opacity: 0.8;
 }
 
 /* ==========================================================================
@@ -1507,51 +1507,82 @@ button:focus-visible,
   pointer-events: none;
   user-select: none;
   animation: bb-traverse 54s infinite linear;
+  transition: z-index 0.2s ease, opacity 0.2s ease;
 }
 
-/* Calm, steady traversal across space — mirrored properly for left & right passes, zero vertical drift */
+.custom-astro-lane.is-speaking {
+  z-index: 50; /* Bring to front while speaking so dialogue is completely unobscured */
+  opacity: 1 !important;
+}
+
+/* Lane traverses strictly horizontally — no transform so speech bubble remains upright */
 @keyframes bb-traverse {
-  /* --- Pass 1: Swimming Left to Right (facing right) --- */
   0% {
     left: -200px;
-    transform: scaleX(-1) rotate(22deg);
   }
   48% {
     left: calc(100vw + 60px);
-    transform: scaleX(-1) rotate(22deg);
   }
-
-  /* --- Turnaround off-screen (flip to face left) --- */
-  49% {
-    left: calc(100vw + 60px);
-    transform: scaleX(1) rotate(-22deg);
-  }
-
-  /* --- Pass 2: Swimming Right to Left (facing left) --- */
   50% {
     left: calc(100vw + 60px);
-    transform: scaleX(1) rotate(-22deg);
   }
   98% {
     left: -200px;
-    transform: scaleX(1) rotate(-22deg);
-  }
-
-  /* --- Reset off-screen to face right for next lap --- */
-  99% {
-    left: -200px;
-    transform: scaleX(-1) rotate(22deg);
   }
   100% {
     left: -200px;
-    transform: scaleX(-1) rotate(22deg);
   }
 }
 
+/* Sprite handles orientation/mirroring and pitch */
 .custom-astro-swimmer {
   position: relative;
   width: 140px;
   height: 140px;
+  animation: bb-sprite-orient 54s infinite linear;
+}
+
+@keyframes bb-sprite-orient {
+  /* Pass 1: Swimming Left to Right (facing right) */
+  0%, 48% {
+    transform: scaleX(-1) rotate(22deg);
+  }
+  /* Turnaround off-screen: flip to face left */
+  49%, 98% {
+    transform: scaleX(1) rotate(-22deg);
+  }
+  /* Reset off-screen to face right */
+  99%, 100% {
+    transform: scaleX(-1) rotate(22deg);
+  }
+}
+
+.custom-astro-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  outline: none;
+  display: block;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: filter 0.2s ease;
+}
+
+.custom-astro-btn:hover {
+  filter: drop-shadow(0 0 16px var(--accent));
+}
+
+.custom-astro-btn:focus-visible {
+  outline: 2px dashed var(--accent);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+.bb-poked {
+  filter: brightness(1.35) drop-shadow(0 0 20px var(--accent)) !important;
 }
 
 .custom-astro-frame {
@@ -1581,6 +1612,86 @@ button:focus-visible,
 @keyframes bb-frame-glide {
   0%, 34% { opacity: 0; visibility: hidden; }
   35%, 100% { opacity: 1; visibility: visible; }
+}
+
+/* Retro Pixel Speech Bubble */
+.bb-speech-bubble {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card);
+  color: var(--text);
+  border: 1.5px solid var(--accent);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 1px var(--border);
+  border-radius: var(--radius-card);
+  padding: 8px 14px;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: bb-bubble-pop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bb-speech-author {
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-size: var(--fs-xs);
+}
+
+.bb-speech-text {
+  color: var(--text);
+}
+
+.bb-speech-arrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--accent);
+}
+
+@keyframes bb-bubble-pop {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+/* Pass clicks through background space to BB while preserving control interactivity */
+.lab-page-main {
+  pointer-events: none;
+}
+
+.lab-hero {
+  pointer-events: none;
+}
+
+.lab-hero-title,
+.lab-hero-intro,
+.lab-hero a,
+.lab-hero button,
+.picker-container,
+.picker-btn,
+.lab-card,
+.work-empty-reset {
+  pointer-events: auto;
 }
 
 /* Primary Swimmer Lane (Upper space, breaststroke) */
@@ -1751,9 +1862,11 @@ button:focus-visible,
     animation: none;
     left: 80%;
     top: 14vh;
+  }
+  .custom-astro-swimmer {
+    animation: none;
     transform: scaleX(-1) rotate(22deg);
   }
-  .custom-astro-swimmer,
   .frame-stroke,
   .frame-glide {
     animation: none !important;
